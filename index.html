@@ -1,0 +1,2615 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A/L Study Planner</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%233b6ef6'/%3E%3Cstop offset='100%25' stop-color='%235b8cff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='4' y='4' width='56' height='56' rx='16' fill='url(%23g)'/%3E%3Cpath d='M18 17h20a8 8 0 0 1 8 8v22H26a8 8 0 0 0-8 8V17z' fill='%23fff' fill-opacity='.98'/%3E%3Cpath d='M18 17h20a8 8 0 0 1 8 8v22H26a8 8 0 0 0-8 8V17z' fill='none' stroke='%23dbe6ff' stroke-width='2'/%3E%3Cpath d='M23 29h16M23 35h16M23 41h11' stroke='%233b6ef6' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='47' cy='16' r='7' fill='%23fff'/%3E%3Cpath d='M47 11.7l1.3 2.9 3.2.3-2.4 2.1.7 3.1-2.8-1.6-2.8 1.6.7-3.1-2.4-2.1 3.2-.3z' fill='%233b6ef6'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+:root{--bg:#f4f6fb;--surface:#fff;--surface-2:#f8fafc;--border:#e3e8ef;--text:#1f2937;--muted:#6b7280;--accent:#3b6ef6;--accent-soft:#e8efff;--danger:#e5484d;--success:#16a34a;--warning:#d97706;--shadow:0 2px 8px rgba(15,23,42,.06);--shadow-lg:0 8px 24px rgba(15,23,42,.1);--radius:12px;--radius-sm:8px}
+[data-theme="dark"]{--bg:#0f1419;--surface:#1a2027;--surface-2:#232b34;--border:#2c3540;--text:#e6edf3;--muted:#8b96a5;--accent:#5b8cff;--accent-soft:#1e2b45;--danger:#ff6b6e;--success:#34d399;--warning:#fbbf24;--shadow:0 2px 8px rgba(0,0,0,.35);--shadow-lg:0 8px 24px rgba(0,0,0,.5)}
+#app{display:flex;min-height:100vh}
+.sidebar{width:240px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:16px 12px;position:sticky;top:0;height:100vh;transition:transform .25s ease;z-index:40}
+.brand{display:flex;gap:10px;align-items:center;padding:6px 8px 16px}
+.brand-logo{width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px;overflow:hidden;flex-shrink:0}
+.brand-logo img{width:100%;height:100%;object-fit:cover}
+.brand-text{display:flex;flex-direction:column;line-height:1.15;min-width:0}
+.brand-text strong{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-text span{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav{display:flex;flex-direction:column;gap:2px;flex:1;overflow-y:auto}
+.nav-link{padding:9px 10px;border-radius:var(--radius-sm);color:var(--text);text-decoration:none;font-size:14px;transition:background .15s,color .15s}
+.nav-link:hover{background:var(--surface-2)}
+.nav-link.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.sidebar-footer{padding-top:8px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:2px}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;gap:12px;padding:14px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:30}
+.topbar h1{font-size:18px;margin:0;flex:1}
+.topbar-actions{color:var(--muted);font-size:13px}
+.content{padding:6px 20px 20px;max-width:1400px;width:100%;margin:0 auto}
+#menuToggle{display:none}
+.btn{border:1px solid var(--border);background:var(--surface);color:var(--text);padding:8px 12px;border-radius:var(--radius-sm);cursor:pointer;font-size:14px;font-family:inherit;transition:background .15s,border-color .15s,transform .05s}
+.btn:hover{background:var(--surface-2)}.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.btn.primary:hover{filter:brightness(1.05)}
+.btn.ghost{background:transparent;border-color:transparent}.btn.ghost:hover{background:var(--surface-2)}
+.btn.danger{background:var(--danger);border-color:var(--danger);color:#fff}
+.btn.small{padding:5px 9px;font-size:12.5px}
+.icon-btn{padding:8px;line-height:1}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
+.card h3{margin:0 0 10px;font-size:15px}
+.grid{display:grid;gap:14px}
+.grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grid.cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:4px 0 12px}
+.section-title h2,.section-title h3{font-size:16px;margin:0}
+.muted{color:var(--muted);font-size:12.5px}
+.empty{text-align:center;color:var(--muted);padding:28px 10px;font-size:14px;border:1px dashed var(--border);border-radius:var(--radius);background:var(--surface-2)}
+label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:4px}
+input,select,textarea{width:100%;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;font-family:inherit;font-size:14px;outline:none;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+textarea{resize:vertical;min-height:80px}
+.form-row{margin-bottom:12px}.form-row.inline{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.toolbar input[type="search"],.toolbar input[type="text"]{flex:1;min-width:180px}
+.toolbar select{width:auto;min-width:130px}
+.toolbar .tt-time{width:110px;min-width:0;padding:7px 8px}.toolbar .tt-time-select{width:auto;min-width:95px;padding:7px 8px}
+.timetable-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);position:relative}
+.timetable{border-collapse:collapse;width:100%;min-width:820px}
+.timetable th,.timetable td{border:1px solid var(--border);padding:4px;vertical-align:top;font-size:12px}
+.timetable th{background:var(--surface-2);font-weight:600;padding:8px 6px;position:sticky;top:0;z-index:2}
+.timetable th.today,.timetable td.today-col{background:var(--accent-soft)}
+.timetable .time-col{width:64px;text-align:right;color:var(--muted);padding-right:8px!important;font-variant-numeric:tabular-nums}
+.timetable td.slot{height:30px;cursor:pointer;position:relative}
+.timetable td.slot:hover{background:var(--surface-2)}
+.event-chip{display:block;border-radius:6px;padding:3px 6px;font-size:11.5px;color:#fff;margin:1px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;text-shadow:0 1px 2px rgba(0,0,0,.15)}
+.event-chip small{opacity:.9;display:block;font-size:10px}
+.now-line{position:absolute;height:2px;background:var(--danger);z-index:3;pointer-events:none}
+.now-line::before{content:"";position:absolute;left:0;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--danger)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal-head{text-align:center;font-size:12px;font-weight:600;color:var(--muted);padding:6px 0;background:var(--surface-2);border-radius:var(--radius-sm)}
+.cal-cell{min-height:100px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px;background:var(--surface);cursor:pointer;display:flex;flex-direction:column;transition:background .15s}
+.cal-cell:hover{background:var(--surface-2)}
+.cal-cell.other{opacity:.35;cursor:default;background:var(--surface-2)}
+.cal-cell.today{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.cal-date{font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:4px}
+.cal-cell.today .cal-date{color:var(--accent)}
+.cal-events{display:flex;flex-direction:column;gap:2px;overflow:hidden}
+.cal-event{font-size:10.5px;color:#fff;padding:2px 4px;border-radius:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 1px 1px rgba(0,0,0,.2)}
+.cal-more{font-size:10px;color:var(--muted);padding-left:4px}
+@media(max-width:760px){.cal-cell{min-height:70px}.cal-event{font-size:9.5px;padding:1px 3px}.cal-head{font-size:10px}}
+.formula-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+.formula-card .fc-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.formula-card .fc-title{font-weight:600;font-size:14.5px}
+.formula-card .fc-meta{color:var(--muted);font-size:12px;margin-top:2px}
+.formula-render{background:var(--surface-2);border-radius:var(--radius-sm);padding:12px;margin:10px 0;text-align:center;overflow-x:auto;min-height:30px}
+.formula-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.note-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+.note-card.pinned{border-left:4px solid var(--warning)}
+.note-card h4{margin:0 0 4px;font-size:14.5px}
+.note-card .note-body{white-space:pre-wrap;font-size:13.5px;margin:8px 0;color:var(--text)}
+.tag{display:inline-block;background:var(--surface-2);border:1px solid var(--border);color:var(--muted);border-radius:999px;padding:1px 8px;font-size:11px;margin-right:4px}
+.progress{background:var(--surface-2);border-radius:999px;height:8px;overflow:hidden;border:1px solid var(--border)}
+.progress>span{display:block;height:100%;background:var(--accent);transition:width .3s}
+.progress-row{display:flex;align-items:center;gap:10px;margin:8px 0}
+.progress-row .pr-label{min-width:130px;font-size:13px}
+.progress-row .pr-bar{flex:1}
+.progress-row .pr-val{min-width:44px;text-align:right;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+.stat .stat-label{color:var(--muted);font-size:12px}
+.stat .stat-value{font-size:22px;font-weight:700;margin-top:4px}
+.stat .stat-sub{color:var(--muted);font-size:12px;margin-top:2px}
+.modal-root{position:fixed;inset:0;display:none;z-index:100;align-items:center;justify-content:center}
+.modal-root.open{display:flex}
+.modal-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(2px)}
+.modal{position:relative;background:var(--surface);color:var(--text);border-radius:var(--radius);box-shadow:var(--shadow-lg);width:min(560px,92vw);max-height:88vh;display:flex;flex-direction:column;border:1px solid var(--border);animation:pop .15s ease}
+.modal.large{width:min(820px,95vw)}
+.modal.small{width:min(420px,92vw)}
+@keyframes pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)}
+.modal-header h2{font-size:16px;margin:0}
+.modal-body{padding:16px;overflow-y:auto}
+.modal-footer{display:flex;justify-content:flex-end;gap:8px;padding:12px 16px;border-top:1px solid var(--border)}
+.toast-root{position:fixed;right:16px;bottom:16px;z-index:200;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--surface);color:var(--text);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius-sm);padding:10px 14px;box-shadow:var(--shadow-lg);font-size:13.5px;animation:slideIn .2s ease;max-width:320px}
+.toast.success{border-left-color:var(--success)}.toast.error{border-left-color:var(--danger)}
+@keyframes slideIn{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
+.q-row{display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
+.q-row .q-num{min-width:48px;font-weight:600}
+.photo-circle{width:80px;height:80px;border-radius:50%;overflow:hidden;background:var(--surface-2);border:2px solid var(--border);display:grid;place-items:center;font-size:28px;color:var(--muted);flex-shrink:0}
+.photo-circle img{width:100%;height:100%;object-fit:cover}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:35}
+/* Gate (welcome / profile picker) */
+#gateRoot{min-height:100vh;min-height:100dvh;background:radial-gradient(circle at top left, var(--accent-soft), transparent 34%),radial-gradient(circle at bottom right, rgba(99,102,241,.08), transparent 30%),var(--bg);}
+.gate-wrap{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:24px}
+.gate-shell{width:min(980px,100%);display:grid;grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);background:var(--surface);border:1px solid var(--border);border-radius:22px;box-shadow:0 22px 60px rgba(15,23,42,.12);overflow:hidden}
+.gate-hero{padding:42px;background:linear-gradient(145deg,var(--accent-soft),transparent 70%);display:flex;flex-direction:column;justify-content:space-between;min-height:560px}
+.gate-brand{display:flex;align-items:center;gap:12px}
+.gate-brand-mark{width:46px;height:46px;border-radius:14px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:15px;font-weight:800;box-shadow:0 10px 22px rgba(59,110,246,.22)}
+.gate-brand-text strong{display:block;font-size:14px}.gate-brand-text span{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+.gate-hero h2{font-size:34px;line-height:1.1;margin:30px 0 12px;letter-spacing:-.8px;max-width:460px}
+.gate-hero p{margin:0;color:var(--muted);font-size:14px;max-width:460px}
+.gate-features{display:grid;gap:10px;margin-top:24px}
+.gate-feature{display:flex;gap:10px;align-items:center;color:var(--text);font-size:13px}
+.gate-feature i{width:26px;height:26px;border-radius:8px;background:var(--surface);border:1px solid var(--border);display:grid;place-items:center;font-style:normal}
+.gate-panel{padding:42px;display:flex;align-items:center}
+.gate-card{width:100%;max-width:430px;margin:auto}
+.gate-logo{width:54px;height:54px;border-radius:16px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:18px;font-weight:800;margin:0 0 18px;letter-spacing:-.5px;box-shadow:0 10px 22px rgba(59,110,246,.18)}
+.gate-h1{font-size:27px;line-height:1.15;font-weight:750;text-align:left;margin:0 0 7px;letter-spacing:-.45px}
+.gate-sub{text-align:left;color:var(--muted);font-size:13px;margin:0 0 24px}
+.profile-btn{display:flex;align-items:center;gap:12px;padding:13px;text-align:left;width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;cursor:pointer;font-family:inherit;color:var(--text);transition:background .15s,border-color .15s,transform .12s; margin-bottom:9px}
+.profile-btn:hover{background:var(--surface-2);border-color:var(--accent);transform:translateY(-1px)}
+.gate-panel .form-row{margin-bottom:14px}
+.gate-panel input,.gate-panel select{min-height:46px}
+.gate-panel .btn.primary{min-height:46px;font-weight:650}
+.gate-note{margin-top:16px;font-size:11.5px;text-align:left}
+.profile-btn:hover{background:var(--surface-2);border-color:var(--accent)}
+.profile-avatar{width:40px;height:40px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:700;font-size:15px;flex-shrink:0;overflow:hidden}
+.profile-avatar img{width:100%;height:100%;object-fit:cover}
+.responsive-stack{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.responsive-grow{flex:1;min-width:240px}
+.photo-actions{display:flex;gap:6px;margin-top:8px;flex-direction:column}
+.photo-crop-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+.photo-crop-canvas{width:min(100%,340px);height:auto;aspect-ratio:1;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-2);display:block;touch-action:none;cursor:grab}
+.photo-crop-canvas.dragging{cursor:grabbing}
+.photo-crop-help{text-align:center;color:var(--muted);font-size:12.5px}
+.photo-crop-zoom{width:min(100%,340px)}
+.profile-avatar img,.photo-circle img{display:block}
+img{max-width:100%}
+button,input,select,textarea{max-width:100%}
+.timetable-wrap,.modal-body,.content{min-width:0}
+@media (max-width:900px){.sidebar{position:fixed;top:0;left:0;height:100vh;transform:translateX(-100%);box-shadow:var(--shadow-lg)}.sidebar.open{transform:translateX(0)}#menuToggle{display:inline-flex}.overlay.open{display:block}.grid.cols-4{grid-template-columns:repeat(2,minmax(0,1fr))}.grid.cols-3{grid-template-columns:repeat(2,minmax(0,1fr))}.content{max-width:100%}}
+@media (max-width:760px){.grid.cols-2,.grid.cols-3,.grid.cols-4{grid-template-columns:1fr}.content{padding:4px 12px 12px}.topbar{padding:10px 12px;gap:8px}.topbar h1{font-size:16px}.topbar-actions{font-size:11px;white-space:nowrap}.card{padding:13px}.gate-wrap{padding:10px;align-items:stretch}.gate-shell{grid-template-columns:1fr;border-radius:16px;min-height:calc(100dvh - 20px)}.gate-hero{display:none}.gate-panel{padding:24px 18px;align-items:flex-start}.gate-card{padding:4px 0;max-width:none}.gate-logo{margin-bottom:16px}.gate-h1{font-size:24px}.gate-sub{margin-bottom:20px}.form-row.inline{grid-template-columns:1fr}.form-actions{justify-content:stretch;flex-wrap:wrap}.form-actions .btn{flex:1;min-width:120px}.responsive-grow{min-width:0;width:100%}.photo-actions{flex-direction:row}.photo-actions .btn{flex:1}.photo-circle{width:76px;height:76px}.toolbar{align-items:stretch}.toolbar .btn,.toolbar select,.toolbar input{width:100%;min-width:0}.toolbar label{width:100%;justify-content:flex-start}.timetable{min-width:760px}.calendar-scroll{overflow-x:auto}.calendar-scroll .cal-grid{min-width:650px}.modal{width:calc(100vw - 20px);max-height:92vh}.modal-body{padding:13px}.modal-footer{padding:10px 13px;flex-wrap:wrap}.modal-footer .btn{flex:1;min-width:110px}}
+@media (max-width:480px){body{font-size:14px}.topbar-actions{display:none}.gate-h1{font-size:23px}.stat .stat-value{font-size:20px}.section-title{gap:8px}.section-title .btn{white-space:nowrap}.profile-btn{padding:11px}.profile-avatar{width:36px;height:36px}.photo-actions{flex-direction:column}.photo-actions .btn{width:100%}input,select,textarea{font-size:16px}.content{padding-bottom:20px}.gate-panel{padding:22px 16px}.gate-shell{min-height:100dvh;border-radius:0;border-left:0;border-right:0}.topbar{position:sticky;top:0}}
+@media (max-width:1100px) and (min-width:761px){.sidebar{width:220px}.content{padding:4px 16px 16px}.grid.cols-4{grid-template-columns:repeat(2,minmax(0,1fr))}.grid.cols-3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (orientation:landscape) and (max-width:900px){.content{padding:4px 12px 12px}.sidebar{width:250px}.gate-wrap{padding:12px}.gate-card{max-height:calc(100dvh - 24px);overflow:auto}}
+@media print{.sidebar,.topbar,.toolbar,.sidebar-footer,.toast-root{display:none!important}.content{padding:0}.card{box-shadow:none;border:none}}
+
+
+/* ============ LIBRARY CUSTOMIZATION ============ */
+.lib-hero-actions{margin-top:12px;display:flex;gap:7px;flex-wrap:wrap}.lib-hero-actions .btn{border-color:color-mix(in srgb,var(--fm-accent) 35%,var(--border));color:var(--fm-accent);background:color-mix(in srgb,var(--fm-accent) 7%,var(--surface))}.nt-hero .lib-hero-actions .btn{border-color:color-mix(in srgb,var(--nt-accent) 35%,var(--border));color:var(--nt-accent);background:color-mix(in srgb,var(--nt-accent) 7%,var(--surface))}
+.fm-hero,.nt-hero{position:relative;overflow:hidden;border-radius:var(--library-radius);padding:var(--library-pad);gap:var(--library-gap)}.fm-hero::before,.nt-hero::before{content:"";position:absolute;inset:auto -60px -80px auto;width:220px;height:220px;border-radius:50%;background:color-mix(in srgb,var(--fm-accent) 12%,transparent);pointer-events:none}.nt-hero::before{background:color-mix(in srgb,var(--nt-accent) 12%,transparent)}
+.fm-hero-copy,.nt-hero-copy,.fm-stats,.nt-stats{position:relative;z-index:1}.fm-kicker{color:var(--fm-accent)}.nt-kicker{color:var(--nt-accent)}.fm-stat b{color:var(--fm-accent)}.nt-stat b{color:var(--nt-accent)}
+.fm-toolbar,.nt-toolbar{border-radius:var(--library-radius);gap:var(--library-gap)}.fm-list,.nt-list{gap:var(--library-gap)}.fm-card,.nt-card{border-radius:var(--library-radius);padding:var(--library-pad)}.fm-card::before{background:var(--card-accent,var(--fm-accent))}.nt-card{border-left:4px solid var(--nt-accent)}.nt-card.pinned{border-top:3px solid var(--warning);border-left:4px solid var(--nt-accent)}
+.fm-preview{display:var(--library-formula-preview)}.fm-badge{background:color-mix(in srgb,var(--fm-accent) 7%,var(--surface));border-color:color-mix(in srgb,var(--fm-accent) 18%,var(--border));color:color-mix(in srgb,var(--fm-accent) 82%,var(--text))}.nt-chip{background:color-mix(in srgb,var(--nt-accent) 11%,var(--surface));color:var(--nt-accent);border:1px solid color-mix(in srgb,var(--nt-accent) 18%,transparent)}
+.fm-hero{background:linear-gradient(135deg,color-mix(in srgb,var(--fm-tint) 16%,var(--surface)),var(--surface))}.nt-hero{background:linear-gradient(135deg,color-mix(in srgb,var(--nt-tint) 16%,var(--surface)),var(--surface))}.fm-hero{box-shadow:0 8px 28px color-mix(in srgb,var(--fm-accent) 8%,transparent)}.nt-hero{box-shadow:0 8px 28px color-mix(in srgb,var(--nt-accent) 8%,transparent)}
+.fm-hero[style]{background:var(--surface)}
+.lib-custom-intro{display:flex;align-items:flex-start;gap:10px;padding:12px;border-radius:12px;background:var(--surface-2);border:1px solid var(--border);margin-bottom:14px}.lib-custom-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--accent-soft);font-size:17px}.lib-color-row{display:flex;align-items:center;gap:10px}.lib-color-row input[type=color]{width:54px;height:38px;padding:2px}.lib-color-row b{font-size:12.5px}.lib-toggle{display:flex;align-items:center;gap:7px;margin:0;color:var(--text)}.lib-toggle input{width:auto}.lib-preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}.lib-preset{border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:999px;padding:6px 9px;font-size:11px;cursor:pointer}.lib-preset:hover{border-color:var(--accent);background:var(--surface-2)}
+@media(max-width:620px){.lib-hero-actions .btn{width:100%}.lib-preset{flex:1;min-width:70px}}
+
+/* ============ STREAM-AWARE LIBRARY POLISH ============ */
+.library-subject-strip{margin:0 0 14px;padding:11px 12px;border:1px solid var(--border);border-radius:14px;background:linear-gradient(135deg,color-mix(in srgb,var(--fm-tint) 28%,var(--surface)),var(--surface));box-shadow:0 4px 16px color-mix(in srgb,var(--fm-accent) 7%,transparent)}.note-strip{background:linear-gradient(135deg,color-mix(in srgb,var(--nt-tint) 28%,var(--surface)),var(--surface));box-shadow:0 4px 16px color-mix(in srgb,var(--nt-accent) 7%,transparent)}.library-subject-strip-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}.library-subject-chips{display:flex;gap:7px;flex-wrap:wrap}.library-subject-chip{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border:1px solid color-mix(in srgb,var(--chip-color) 28%,var(--border));background:color-mix(in srgb,var(--chip-color) 7%,var(--surface));color:var(--text);border-radius:999px;font:600 11px/1.1 inherit;cursor:pointer;transition:transform .12s ease,border-color .12s ease,background .12s ease}.library-subject-chip span{width:8px;height:8px;border-radius:50%;box-shadow:0 0 0 2px color-mix(in srgb,var(--chip-color) 15%,transparent)}.library-subject-chip:hover{transform:translateY(-1px);background:color-mix(in srgb,var(--chip-color) 12%,var(--surface));border-color:var(--chip-color)}.library-subject-note{color:var(--muted);font-size:11.5px}
+/* ============ PREMIUM FORMULA / NOTE UI ============ */
+.fm-hero,.nt-hero{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:20px;margin-bottom:14px;background:linear-gradient(135deg,var(--surface),var(--surface-2));border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}
+.fm-hero-copy,.nt-hero-copy{min-width:0}.fm-kicker,.nt-kicker{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:800;margin-bottom:4px}.fm-hero h2,.nt-hero h2{font-size:22px;line-height:1.2;margin:0 0 5px}.fm-hero p,.nt-hero p{margin:0;color:var(--muted);font-size:13px;max-width:760px}.fm-stats,.nt-stats{display:grid;grid-template-columns:repeat(3,minmax(88px,1fr));gap:8px;min-width:280px}.fm-stat,.nt-stat{background:linear-gradient(180deg,var(--surface),color-mix(in srgb,var(--surface-2) 70%,var(--surface)));border:1px solid color-mix(in srgb,var(--fm-accent) 14%,var(--border));border-radius:12px;padding:11px}.nt-stat.clickable{cursor:pointer;transition:transform .12s ease,border-color .12s ease,box-shadow .12s ease}.nt-stat.clickable:hover{transform:translateY(-1px);border-color:color-mix(in srgb,var(--nt-accent) 35%,var(--border));box-shadow:0 5px 14px color-mix(in srgb,var(--nt-accent) 8%,transparent)}.nt-stat.active{border-color:var(--nt-accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--nt-accent) 14%,transparent)}.fm-stat b,.nt-stat b{display:block;font-size:18px;line-height:1.1}.nt-stat{border-color:color-mix(in srgb,var(--nt-accent) 14%,var(--border))}.fm-stat span,.nt-stat span{display:block;color:var(--muted);font-size:10.5px;margin-top:3px}
+.fm-toolbar,.nt-toolbar{display:grid;grid-template-columns:minmax(220px,1.6fr) repeat(2,minmax(140px,1fr)) auto auto;gap:8px;align-items:center;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);margin-bottom:14px}.fm-toolbar .btn,.nt-toolbar .btn{white-space:nowrap}.fm-filter-check{display:flex;align-items:center;gap:6px;margin:0;padding:0 4px;font-size:12.5px;color:var(--text)}.fm-filter-check input{width:auto}
+.fm-list,.nt-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.fm-card{position:relative;background:var(--library-card-bg,var(--surface));border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:var(--library-card-shadow,var(--shadow));overflow:hidden;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}.fm-card:hover,.nt-card:hover{transform:translateY(-1px);box-shadow:var(--shadow-lg);border-color:color-mix(in srgb,var(--accent) 35%,var(--border))}.fm-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--card-accent,var(--accent))}.fm-card-top,.nt-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.fm-title-row,.nt-title-row{display:flex;align-items:center;gap:7px;min-width:0}.fm-card h3,.nt-card h3{margin:0;font-size:15.5px;line-height:1.25}.fm-sub,.nt-sub{margin-top:4px;color:var(--muted);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fm-badges,.nt-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px}.fm-badge,.nt-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 7px;border-radius:999px;background:var(--surface-2);border:1px solid var(--border);color:var(--muted);font-size:10.5px}.fm-preview{margin:12px 0;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:14px;min-height:70px;display:grid;place-items:center;overflow:auto}.fm-expl{font-size:12.5px;color:var(--text);line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.fm-actions,.nt-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.fm-icon{border:0;background:transparent;color:var(--muted);cursor:pointer;padding:4px 6px;border-radius:8px;font-size:16px}.fm-icon:hover{background:var(--surface-2);color:var(--accent)}
+.nt-card{background:var(--library-card-bg,var(--surface));border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:var(--library-card-shadow,var(--shadow));transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}.nt-card.pinned{border-top:3px solid var(--warning);padding-top:14px}.nt-body{margin:12px 0 10px;white-space:pre-wrap;font-size:13px;line-height:1.65;color:var(--text);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:var(--nt-lines,6);overflow:hidden}.nt-meta-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}.nt-word{color:var(--muted);font-size:11px}.nt-tag-wrap{display:flex;gap:5px;flex-wrap:wrap}.nt-chip{display:inline-flex;align-items:center;padding:3px 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:10.5px;font-weight:600}.nt-toolbar{grid-template-columns:minmax(220px,1.6fr) minmax(140px,1fr) auto auto}.nt-toolbar select{min-width:150px}
+.fm-empty,.nt-empty{grid-column:1/-1;text-align:center;padding:38px 20px;background:var(--surface);border:1px dashed var(--border);border-radius:16px}.fm-empty strong,.nt-empty strong{display:block;font-size:15px;margin-bottom:4px}.fm-empty span,.nt-empty span{color:var(--muted);font-size:12.5px}.smart-count{color:var(--muted);font-size:11.5px;margin-left:auto;white-space:nowrap}
+@media(max-width:980px){.fm-toolbar{grid-template-columns:1fr 1fr;}.fm-toolbar input[type=search]{grid-column:1/-1}.fm-list,.nt-list{grid-template-columns:1fr}.fm-hero,.nt-hero{flex-direction:column}.fm-stats,.nt-stats{width:100%;min-width:0}}
+@media(max-width:620px){.fm-toolbar,.nt-toolbar{grid-template-columns:1fr}.fm-hero,.nt-hero{padding:16px}.fm-hero h2,.nt-hero h2{font-size:19px}.fm-actions .btn,.nt-actions .btn{flex:1}.fm-stats,.nt-stats{grid-template-columns:repeat(3,1fr)}}
+
+</style>
+</head>
+<body>
+
+<div id="gateRoot"></div>
+
+<div id="app" style="display:none">
+  <aside id="sidebar" class="sidebar">
+    <div class="brand">
+      <div class="brand-logo" id="brandLogo">A/L</div>
+      <div class="brand-text">
+        <strong id="brandName">Study Planner</strong>
+        <span id="brandSub">A/L Student</span>
+      </div>
+    </div>
+    <nav class="nav" id="mainNav">
+      <a href="#dashboard" data-route="dashboard" class="nav-link">📊 Dashboard</a>
+      <a href="#timetable" data-route="timetable" class="nav-link">🗓️ Timetable</a>
+      <a href="#formulas" data-route="formulas" class="nav-link">📐 Formula Book</a>
+      <a href="#notes" data-route="notes" class="nav-link">📝 Notes</a>
+      <a href="#study" data-route="study" class="nav-link">⏱️ Study Tracker</a>
+      <a href="#settings" data-route="settings" class="nav-link">⚙️ Settings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button id="themeToggle" class="btn ghost" style="width:100%;text-align:left">🌙 Theme</button>
+      <button id="switchProfileBtn" class="btn ghost" style="width:100%;text-align:left">👥 Switch Account</button>
+      <button id="logoutBtn" class="btn ghost" style="width:100%;text-align:left">↪ Log Out</button>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <button id="menuToggle" class="btn ghost icon-btn" aria-label="Menu">☰</button>
+      <h1 id="pageTitle">Dashboard</h1>
+      <div class="topbar-actions"><span id="todayLabel" class="muted"></span></div>
+    </header>
+    <main id="content" class="content"></main>
+  </div>
+  <div id="overlay" class="overlay"></div>
+</div>
+
+<div id="modalRoot" class="modal-root" aria-hidden="true">
+  <div class="modal-backdrop" data-close="1"></div>
+  <div class="modal" id="modalBox" role="dialog" aria-modal="true">
+    <div class="modal-header"><h2 id="modalTitle">Title</h2><button class="btn ghost icon-btn" data-close="1">✕</button></div>
+    <div id="modalBody" class="modal-body"></div>
+    <div id="modalFooter" class="modal-footer"></div>
+  </div>
+</div>
+
+<div id="confirmRoot" class="modal-root" aria-hidden="true">
+  <div class="modal-backdrop" data-confirm-close="1"></div>
+  <div class="modal small" role="alertdialog" aria-modal="true">
+    <div class="modal-header"><h2 id="confirmTitle">Confirm</h2></div>
+    <div id="confirmBody" class="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn ghost" data-confirm-close="1">Cancel</button>
+      <button class="btn danger" id="confirmOk">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div id="toastRoot" class="toast-root"></div>
+
+<script>
+/* ============ CLOUD AUTH / FIRESTORE (optional until Firebase config is supplied) ============ */
+/*
+  Replace the values below with the Firebase Web App config from your Firebase project.
+  The Firebase web config is not a password/secret; security is enforced by Authentication
+  and the Firestore rules supplied with this file.
+*/
+window.AL_STUDY_PLANNER_FIREBASE_CONFIG = window.AL_STUDY_PLANNER_FIREBASE_CONFIG || {
+  apiKey: "PASTE_FIREBASE_API_KEY",
+  authDomain: "PASTE_FIREBASE_AUTH_DOMAIN",
+  projectId: "PASTE_FIREBASE_PROJECT_ID",
+  storageBucket: "PASTE_FIREBASE_STORAGE_BUCKET",
+  messagingSenderId: "PASTE_FIREBASE_MESSAGING_SENDER_ID",
+  appId: "PASTE_FIREBASE_APP_ID"
+};
+
+window.ALStudyPlannerCloud = (() => {
+  let readyResolve;
+  const ready = new Promise(resolve => { readyResolve = resolve; });
+  const cloud = { enabled:false, ready, user:null, error:null, authReady:ready };
+  const cfg = window.AL_STUDY_PLANNER_FIREBASE_CONFIG || {};
+  const values = Object.values(cfg).map(v => String(v || ""));
+  const configured = values.length >= 6 && !values.some(v => !v || v.startsWith("PASTE_FIREBASE_"));
+  if(!configured){ readyResolve(null); return cloud; }
+
+  Promise.all([
+    import("https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js"),
+    import("https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js"),
+    import("https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js")
+  ]).then(([appMod, authMod, fsMod]) => {
+    const firebaseApp = appMod.initializeApp(cfg);
+    const auth = authMod.getAuth(firebaseApp);
+    const db = fsMod.getFirestore(firebaseApp);
+    cloud.enabled = true;
+    cloud.app = firebaseApp;
+    cloud.auth = auth;
+    cloud.db = db;
+    cloud._authApi = authMod;
+    cloud._fsApi = fsMod;
+    cloud._readySettled = false;
+
+    cloud.userReady = new Promise(resolve => {
+      let first = true;
+      authMod.onAuthStateChanged(auth, user => {
+        cloud.user = user || null;
+        if(first){ first = false; resolve(user || null); readyResolve(user || null); }
+      });
+    });
+
+    const emailFor = username => `${String(username || "").trim().toLowerCase()}@accounts.alstudyplanner.com`;
+    cloud.createAccount = async (username, password, profile, state) => {
+      await authMod.setPersistence(auth, authMod.browserLocalPersistence);
+      const cred = await authMod.createUserWithEmailAndPassword(auth, emailFor(username), password);
+      const uid = cred.user.uid;
+      try {
+        await fsMod.setDoc(fsMod.doc(db, "users", uid), {
+          profile: { ...profile, username: String(username || "").trim().toLowerCase() },
+          state,
+          updatedAt: fsMod.serverTimestamp()
+        });
+      } catch(err){
+        try { await authMod.deleteUser(cred.user); } catch(cleanErr){}
+        throw err;
+      }
+      cloud.user = cred.user;
+      return cred.user;
+    };
+
+    cloud.signIn = async (username, password) => {
+      await authMod.setPersistence(auth, authMod.browserLocalPersistence);
+      const cred = await authMod.signInWithEmailAndPassword(auth, emailFor(username), password);
+      cloud.user = cred.user;
+      return cred.user;
+    };
+
+    cloud.load = async uid => {
+      const snap = await fsMod.getDoc(fsMod.doc(db, "users", uid));
+      return snap.exists() ? snap.data() : null;
+    };
+
+    cloud.save = async (uid, profile, state) => {
+      await fsMod.setDoc(fsMod.doc(db, "users", uid), {
+        profile: { ...profile },
+        state,
+        updatedAt: fsMod.serverTimestamp()
+      }, { merge:true });
+    };
+
+    cloud.logout = async () => { await authMod.signOut(auth); cloud.user = null; };
+    cloud.deleteAccount = async uid => {
+      await fsMod.deleteDoc(fsMod.doc(db, "users", uid));
+      if(auth.currentUser) await authMod.deleteUser(auth.currentUser);
+      cloud.user = null;
+    };
+
+    readyResolve(null);
+  }).catch(err => {
+    cloud.error = err;
+    readyResolve(null);
+  });
+  return cloud;
+})();
+</script>
+<script>
+/* ============ INDEXEDDB (photo storage) ============ */
+const fileDB = {
+  db: null,
+  async open() {
+    if (this.db) return this.db;
+    return new Promise((res, rej) => {
+      const req = indexedDB.open("alPlannerFiles", 1);
+      req.onupgradeneeded = e => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains("files")) db.createObjectStore("files", { keyPath: "id" });
+      };
+      req.onsuccess = e => { this.db = e.target.result; res(this.db); };
+      req.onerror = e => rej(e);
+    });
+  },
+  async put(entry) {
+    const db = await this.open();
+    return new Promise((res, rej) => {
+      const tx = db.transaction("files", "readwrite");
+      tx.objectStore("files").put(entry);
+      tx.oncomplete = () => res(entry);
+      tx.onerror = e => rej(e);
+    });
+  },
+  async get(id) {
+    const db = await this.open();
+    return new Promise((res, rej) => {
+      const tx = db.transaction("files", "readonly");
+      const req = tx.objectStore("files").get(id);
+      req.onsuccess = () => res(req.result);
+      req.onerror = e => rej(e);
+    });
+  },
+  async delete(id) {
+    const db = await this.open();
+    return new Promise((res, rej) => {
+      const tx = db.transaction("files", "readwrite");
+      tx.objectStore("files").delete(id);
+      tx.oncomplete = () => res();
+      tx.onerror = e => rej(e);
+    });
+  }
+};
+function readFileAsArrayBuffer(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = rej;
+    r.readAsArrayBuffer(file);
+  });
+}
+
+/* ============ ROOT (accounts registry) ============ */
+const ROOT_KEY = "alStudyPlanner.root.v1";
+const memoryStore = new Map();
+let root = { profiles: [], current: null };
+let profileId = null;
+let activeAuth = false;
+let cloudProfile = null;
+let storageWarningShown = false;
+
+/* Some browsers/environments block localStorage for file:// pages or private/embedded contexts.
+   Use a memory fallback so the app still works instead of dying on the login/profile screen. */
+function storageGet(key){
+  if(memoryStore.has(key)) return memoryStore.get(key);
+  try { return localStorage.getItem(key); }
+  catch(e){ return null; }
+}
+function storageSet(key, value){
+  try {
+    localStorage.setItem(key, value);
+    memoryStore.delete(key);
+    return true;
+  } catch(e){
+    memoryStore.set(key, String(value));
+    return false;
+  }
+}
+function storageRemove(key){
+  try { localStorage.removeItem(key); } catch(e) {}
+  memoryStore.delete(key);
+}
+function showStorageWarning(){
+  if(storageWarningShown) return;
+  storageWarningShown = true;
+  setTimeout(() => toast("Browser storage is blocked. Changes will last until this tab is closed.", "error"), 0);
+}
+
+function loadRoot(){
+  try { root = JSON.parse(storageGet(ROOT_KEY)) || {profiles:[], current:null}; }
+  catch { root = {profiles:[], current:null}; }
+  if(!root || typeof root !== "object" || Array.isArray(root)) root = {profiles:[], current:null};
+  if(!Array.isArray(root.profiles)) root.profiles = [];
+  root.profiles = root.profiles
+    .filter(p => p && typeof p === "object" && String(p.id || "").trim() && String(p.name || "").trim())
+    .map(p => ({
+      id: String(p.id),
+      name: String(p.name).trim(),
+      username: String(p.username || "").trim().toLowerCase(),
+      passHash: typeof p.passHash === "string" ? p.passHash : "",
+      passSalt: typeof p.passSalt === "string" ? p.passSalt : "",
+      stream: String(p.stream || ""),
+      examYear: String(p.examYear || ""),
+      photoData: typeof p.photoData === "string" ? p.photoData : "",
+      createdAt: p.createdAt || new Date().toISOString()
+    }));
+  if(root.current && !root.profiles.find(p => p.id === root.current)) root.current = null;
+}
+function saveRoot(){
+  const ok = storageSet(ROOT_KEY, JSON.stringify(root));
+  if(!ok) showStorageWarning();
+}
+function profileDataKey(id){ return `alStudyPlanner.data.${id}`; }
+function getActiveProfileMeta(){
+  if(window.ALStudyPlannerCloud?.enabled && cloudProfile) return cloudProfile;
+  return root.profiles.find(x => x.id === profileId) || null;
+}
+function hasAnyLocalProfiles(){ return Array.isArray(root.profiles) && root.profiles.length > 0; }
+let cloudSaveChain = Promise.resolve();
+let cloudSyncWarningShown = false;
+function queueCloudSave(){
+  if(!window.ALStudyPlannerCloud?.enabled || !activeAuth || !window.ALStudyPlannerCloud.user || !profileId || !state) return;
+  const p = getActiveProfileMeta();
+  if(!p) return;
+  const payload = {
+    username: p.username || "",
+    name: p.name || state.settings.studentName || "",
+    stream: p.stream || state.settings.stream || "",
+    examYear: p.examYear || state.settings.examYear || "",
+    photoData: state.settings.photoData || p.photoData || ""
+  };
+  cloudSaveChain = cloudSaveChain
+    .then(() => window.ALStudyPlannerCloud.save(window.ALStudyPlannerCloud.user.uid, payload, state))
+    .catch(err => {
+      console.error("Cloud save failed:", err);
+      if(!cloudSyncWarningShown){
+        cloudSyncWarningShown = true;
+        toast("Cloud sync failed. Check your internet connection.", "error");
+      }
+    });
+}
+async function flushCloudSave(){
+  try { await cloudSaveChain; } catch(e){}
+}
+function normalizeUsername(v){
+  return String(v || "").trim().toLowerCase().replace(/[^a-z0-9._-]/g, "");
+}
+function randomHex(bytes=16){
+  const a = new Uint8Array(bytes);
+  if(window.crypto?.getRandomValues) window.crypto.getRandomValues(a);
+  else for(let i=0;i<a.length;i++) a[i] = Math.floor(Math.random()*256);
+  return Array.from(a, b => b.toString(16).padStart(2,"0")).join("");
+}
+async function hashPassword(password, salt){
+  const raw = new TextEncoder().encode(`${salt}\u0000${password}`);
+  if(window.crypto?.subtle){
+    const buf = await window.crypto.subtle.digest("SHA-256", raw);
+    return Array.from(new Uint8Array(buf), b => b.toString(16).padStart(2,"0")).join("");
+  }
+  // Conservative fallback for older/incompatible local file environments.
+  let h = 2166136261;
+  for(const b of raw){ h ^= b; h = Math.imul(h, 16777619); }
+  return (h >>> 0).toString(16).padStart(8,"0");
+}
+function profileByUsername(username){
+  const u = normalizeUsername(username);
+  return root.profiles.find(p => normalizeUsername(p.username || p.name) === u) || null;
+}
+function isUsernameTaken(username, exceptId=""){
+  const u = normalizeUsername(username);
+  return !!u && root.profiles.some(p => p.id !== exceptId && normalizeUsername(p.username || p.name) === u);
+}
+
+/* ============ PER-PROFILE STATE ============ */
+const DEFAULT_STATE = {
+  settings:{studentName:"",stream:"",examYear:"",dailyTarget:3,theme:"light",accent:"#3b6ef6",photoId:"",photoData:"",deletedStarterSubjects:[],library:{formulaAccent:"#3b6ef6",noteAccent:"#8b5cf6",formulaTint:"#dbeafe",noteTint:"#ede9fe",cardRadius:16,density:"comfortable",heroStyle:"gradient",cardStyle:"elevated",showFormulaPreview:true,notePreviewLines:6},timetable:{start:"06:00",end:"21:00",interval:60,weekStart:"Mon"}},
+  subjects:[],timetableEvents:[],formulas:[],notes:[],studySessions:[]
+};
+let state = null;
+let currentRoute = "dashboard";
+
+function cloneDefaultState(){
+  return JSON.parse(JSON.stringify(DEFAULT_STATE));
+}
+function normalizeState(raw){
+  const s = deepMerge(cloneDefaultState(), (raw && typeof raw === "object" && !Array.isArray(raw)) ? raw : {});
+  if(!s.settings || typeof s.settings !== "object" || Array.isArray(s.settings)) s.settings = cloneDefaultState().settings;
+  if(!s.settings.timetable || typeof s.settings.timetable !== "object" || Array.isArray(s.settings.timetable)) s.settings.timetable = cloneDefaultState().settings.timetable;
+  if(!s.settings.library || typeof s.settings.library !== "object" || Array.isArray(s.settings.library)) s.settings.library = cloneDefaultState().settings.library;
+  if(!Array.isArray(s.settings.deletedStarterSubjects)) s.settings.deletedStarterSubjects = [];
+  s.settings.deletedStarterSubjects = [...new Set(s.settings.deletedStarterSubjects.map(normalizeSubjectName).filter(Boolean))];
+  ["subjects","timetableEvents","formulas","notes","studySessions"].forEach(k => { if(!Array.isArray(s[k])) s[k] = []; });
+
+  // Repair legacy/imported subject records so every subject can be selected safely.
+  const usedSubjectIds = new Set();
+  s.subjects = s.subjects.map((sub, index) => {
+    const item = (sub && typeof sub === "object" && !Array.isArray(sub)) ? sub : {};
+    let id = String(item.id || "").trim();
+    if(!id || usedSubjectIds.has(id)) id = uid("sub") + "_" + index;
+    usedSubjectIds.add(id);
+    return {
+      ...item,
+      id,
+      name: String(item.name || "").trim(),
+      color: /^#[0-9a-fA-F]{6}$/.test(String(item.color || "")) ? item.color : "#3b6ef6",
+      icon: String(item.icon || "📘")
+    };
+  }).filter(sub => sub.name);
+  return s;
+}
+function saveData(){
+  if(!profileId || !state) return;
+  const ok = storageSet(profileDataKey(profileId), JSON.stringify(state));
+  if(!ok) showStorageWarning();
+  if(window.ALStudyPlannerCloud?.enabled && activeAuth && window.ALStudyPlannerCloud.user) queueCloudSave();
+}
+function updateData(m){ m(state); saveData(); }
+function deleteData(col,id){ updateData(s=>{ s[col] = s[col].filter(x => x.id !== id); }); }
+function deepMerge(t,s){
+  for(const k of Object.keys(s)){
+    const sv = s[k];
+    if(sv && typeof sv === "object" && !Array.isArray(sv) && t[k] && typeof t[k] === "object" && !Array.isArray(t[k])) deepMerge(t[k],sv);
+    else t[k] = sv;
+  }
+  return t;
+}
+
+/* ============ CRUD ============ */
+function uid(p="id"){ return `${p}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,8)}`; }
+function addItem(col,item){ item.id = item.id || uid(col.slice(0,3)); updateData(s=>s[col].push(item)); return item; }
+function updateItem(col,id,patch){ updateData(s=>{ const i = s[col].findIndex(x=>x.id===id); if(i>=0) s[col][i] = {...s[col][i], ...patch}; }); }
+function getItem(col,id){ return state[col].find(x=>x.id===id); }
+function subjectById(id){ return state.subjects.find(s=>s.id===id); }
+function subjectColor(id){ const s = subjectById(id); return s ? s.color : "#94a3b8"; }
+function subjectName(id){ const s = subjectById(id); return s ? s.name : "—"; }
+
+/* ============ UI UTILS ============ */
+function toast(msg,type="info"){
+  const r = document.getElementById("toastRoot");
+  const el = document.createElement("div");
+  el.className = "toast " + (type==="success"?"success":type==="error"?"error":"");
+  el.textContent = msg;
+  r.appendChild(el);
+  setTimeout(()=>{ el.style.opacity="0"; el.style.transition="opacity .3s"; }, 2200);
+  setTimeout(()=>el.remove(), 2600);
+}
+function openModal({title,bodyHTML,footerHTML,onMount,size}){
+  const rootEl = document.getElementById("modalRoot");
+  const box = document.getElementById("modalBox");
+  box.className = "modal" + (size==="large"?" large":size==="small"?" small":"");
+  document.getElementById("modalTitle").textContent = title;
+  document.getElementById("modalBody").innerHTML = bodyHTML;
+  document.getElementById("modalFooter").innerHTML = footerHTML || "";
+  rootEl.classList.add("open");
+  rootEl.setAttribute("aria-hidden","false");
+  if(onMount) onMount(document.getElementById("modalBody"), document.getElementById("modalFooter"));
+}
+function closeModal(){
+  const rootEl = document.getElementById("modalRoot");
+  rootEl.classList.remove("open");
+  rootEl.setAttribute("aria-hidden","true");
+  document.getElementById("modalBody").innerHTML = "";
+  document.getElementById("modalFooter").innerHTML = "";
+}
+let confirmResolver = null;
+function confirmDialog(title,msg){
+  return new Promise(res=>{
+    confirmResolver = res;
+    document.getElementById("confirmTitle").textContent = title;
+    document.getElementById("confirmBody").textContent = msg;
+    document.getElementById("confirmRoot").classList.add("open");
+  });
+}
+function resolveConfirm(v){
+  document.getElementById("confirmRoot").classList.remove("open");
+  if(confirmResolver){ confirmResolver(v); confirmResolver = null; }
+}
+function esc(str){ return String(str ?? "").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[m]); }
+
+/* ============ THEME ============ */
+function applyTheme(){
+  if(!state) { document.documentElement.setAttribute("data-theme","light"); return; }
+  const t = state.settings.theme;
+  let e = t;
+  if(t==="system") e = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", e);
+}
+function applyAccent(){
+  if(!state) { document.documentElement.style.setProperty("--accent","#3b6ef6"); document.documentElement.style.setProperty("--accent-soft","rgba(59,110,246,.15)"); return; }
+  const a = state.settings.accent || "#3b6ef6";
+  document.documentElement.style.setProperty("--accent", a);
+  document.documentElement.style.setProperty("--accent-soft", hexToRgba(a, .15));
+}
+function applyLibraryAppearance(){
+  const lib = state?.settings?.library || DEFAULT_STATE.settings.library;
+  document.documentElement.style.setProperty("--fm-accent", lib.formulaAccent || "#3b6ef6");
+  document.documentElement.style.setProperty("--nt-accent", lib.noteAccent || "#8b5cf6");
+  document.documentElement.style.setProperty("--fm-tint", lib.formulaTint || "#dbeafe");
+  document.documentElement.style.setProperty("--nt-tint", lib.noteTint || "#ede9fe");
+  document.documentElement.style.setProperty("--library-radius", `${Math.max(10, Math.min(28, Number(lib.cardRadius) || 16))}px`);
+  const gaps = lib.density === "compact" ? "10px" : lib.density === "spacious" ? "18px" : "14px";
+  const pad = lib.density === "compact" ? "13px" : lib.density === "spacious" ? "19px" : "16px";
+  document.documentElement.style.setProperty("--library-gap", gaps);
+  document.documentElement.style.setProperty("--library-pad", pad);
+  document.documentElement.style.setProperty("--library-hero", lib.heroStyle === "solid" ? "solid" : "gradient");
+  document.documentElement.style.setProperty("--library-card-shadow", lib.cardStyle === "flat" ? "none" : lib.cardStyle === "soft" ? "0 4px 16px color-mix(in srgb,var(--accent) 7%,transparent)" : "var(--shadow)");
+  document.documentElement.style.setProperty("--library-card-bg", lib.cardStyle === "soft" ? "color-mix(in srgb,var(--surface) 88%, var(--surface-2))" : "var(--surface)");
+  document.documentElement.style.setProperty("--library-formula-preview", lib.showFormulaPreview === false ? "none" : "grid");
+  document.documentElement.style.setProperty("--nt-lines", String(Math.max(3, Math.min(10, Number(lib.notePreviewLines) || 6))));
+}
+
+
+function openLibraryCustomize(kind="formula"){
+  const lib = state.settings.library || (state.settings.library = {...DEFAULT_STATE.settings.library});
+  const title = kind === "note" ? "Customize Notes" : "Customize Formula Book";
+  const accentKey = kind === "note" ? "noteAccent" : "formulaAccent";
+  const tintKey = kind === "note" ? "noteTint" : "formulaTint";
+  const label = kind === "note" ? "Notes accent" : "Formula Book accent";
+  const tintLabel = kind === "note" ? "Notes soft color" : "Formula Book soft color";
+  openModal({
+    title, size:"small",
+    bodyHTML:`
+      <div class="lib-custom-intro"><span class="lib-custom-icon">🎨</span><div><strong>Make it yours</strong><div class="muted">Tune the library look while keeping every saved item unchanged.</div></div></div>
+      <div class="form-row inline"><div><label>${label}</label><div class="lib-color-row"><input type="color" id="libAccent" value="${esc(lib[accentKey] || (kind === "note" ? "#8b5cf6" : "#3b6ef6"))}" /></div></div><div><label>${tintLabel}</label><div class="lib-color-row"><input type="color" id="libTint" value="${esc(lib[tintKey] || (kind === "note" ? "#ede9fe" : "#dbeafe"))}" /></div></div></div>
+      <div class="form-row"><label>Card density</label><select id="libDensity"><option value="compact" ${lib.density==="compact"?"selected":""}>Compact</option><option value="comfortable" ${lib.density==="comfortable"?"selected":""}>Comfortable</option><option value="spacious" ${lib.density==="spacious"?"selected":""}>Spacious</option></select></div>
+      <div class="form-row"><label>Card corner radius</label><input type="range" id="libRadius" min="10" max="28" step="1" value="${Math.max(10, Math.min(28, Number(lib.cardRadius)||16))}" /><div class="muted" id="libRadiusLabel">${Math.max(10, Math.min(28, Number(lib.cardRadius)||16))}px</div></div>
+      <div class="form-row inline"><div><label>Header style</label><select id="libHero"><option value="gradient" ${lib.heroStyle==="gradient"?"selected":""}>Soft gradient</option><option value="solid" ${lib.heroStyle==="solid"?"selected":""}>Clean solid</option></select></div><div><label>Card style</label><select id="libCard"><option value="elevated" ${(!lib.cardStyle||lib.cardStyle==="elevated")?"selected":""}>Elevated</option><option value="soft" ${lib.cardStyle==="soft"?"selected":""}>Soft</option><option value="flat" ${lib.cardStyle==="flat"?"selected":""}>Flat</option></select></div></div>
+      ${kind === "formula" ? `<div class="form-row"><label class="lib-toggle"><input type="checkbox" id="libFormulaPreview" ${lib.showFormulaPreview!==false?"checked":""}/> Show formula preview on cards</label></div>` : `<div class="form-row"><label>Note preview length</label><input type="range" id="libNoteLines" min="3" max="10" step="1" value="${Math.max(3, Math.min(10, Number(lib.notePreviewLines)||6))}" /><div class="muted" id="libNoteLinesLabel">${Math.max(3, Math.min(10, Number(lib.notePreviewLines)||6))} lines</div></div>`}
+      <div class="lib-preset-row"><button class="lib-preset" type="button" data-lib-preset="ocean">Ocean</button><button class="lib-preset" type="button" data-lib-preset="violet">Violet</button><button class="lib-preset" type="button" data-lib-preset="emerald">Emerald</button><button class="lib-preset" type="button" data-lib-preset="sunset">Sunset</button></div>`,
+    footerHTML:`<button class="btn ghost" data-close="1">Cancel</button><button class="btn primary" id="libSave">Save Customization</button>`,
+    onMount:(b,f)=>{
+      const accent=b.querySelector("#libAccent"),tint=b.querySelector("#libTint"),rad=b.querySelector("#libRadius"),radLbl=b.querySelector("#libRadiusLabel"),noteLines=b.querySelector("#libNoteLines"),noteLbl=b.querySelector("#libNoteLinesLabel");
+      rad.addEventListener("input",()=>radLbl.textContent=`${rad.value}px`);
+      if(noteLines)noteLines.addEventListener("input",()=>noteLbl.textContent=`${noteLines.value} lines`);
+      const presets={
+        ocean:{accent:kind==="note"?"#0ea5a4":"#2563eb",tint:kind==="note"?"#ccfbf1":"#dbeafe"},
+        violet:{accent:"#8b5cf6",tint:"#ede9fe"},
+        emerald:{accent:"#059669",tint:"#d1fae5"},
+        sunset:{accent:"#ea580c",tint:"#ffedd5"}
+      };
+      b.querySelectorAll("[data-lib-preset]").forEach(btn=>btn.addEventListener("click",()=>{const pr=presets[btn.dataset.libPreset];if(!pr)return;accent.value=pr.accent;tint.value=pr.tint;}));
+      f.querySelector("[data-close]").addEventListener("click",closeModal);
+      f.querySelector("#libSave").addEventListener("click",()=>{
+        updateData(st=>{
+          st.settings.library=st.settings.library||{...DEFAULT_STATE.settings.library};
+          st.settings.library[accentKey]=accent.value;
+          st.settings.library[tintKey]=tint.value;
+          st.settings.library.density=b.querySelector("#libDensity").value;
+          st.settings.library.cardRadius=parseInt(rad.value,10)||16;
+          st.settings.library.heroStyle=b.querySelector("#libHero").value;
+          st.settings.library.cardStyle=b.querySelector("#libCard").value;
+          if(kind==="formula") st.settings.library.showFormulaPreview=b.querySelector("#libFormulaPreview").checked;
+          else st.settings.library.notePreviewLines=parseInt(noteLines.value,10)||6;
+        });
+        applyLibraryAppearance(); closeModal(); render(); toast("Customization saved","success");
+      });
+    }
+  });
+}
+
+
+function hexToRgba(hex,alpha){
+  const h = hex.replace("#","");
+  const n = parseInt(h.length===3 ? h.split("").map(c=>c+c).join("") : h, 16);
+  return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${alpha})`;
+}
+
+/* ============ ROUTING ============ */
+const ROUTES = {
+  dashboard:{title:"Dashboard",render:renderDashboard},
+  timetable:{title:"Timetable",render:renderTimetable},
+  formulas:{title:"Formula Book",render:renderFormulas},
+  notes:{title:"Notes",render:renderNotes},
+  study:{title:"Study Tracker",render:renderStudy},
+  settings:{title:"Settings",render:renderSettings}
+};
+function navigate(route){
+  if(!ROUTES[route]) route = "dashboard";
+  currentRoute = route;
+  document.getElementById("pageTitle").textContent = ROUTES[route].title;
+  document.querySelectorAll(".nav-link").forEach(a => a.classList.toggle("active", a.dataset.route === route));
+  window.location.hash = "#" + route;
+  render();
+  closeSidebarOnMobile();
+}
+function render(){
+  const fn = ROUTES[currentRoute]?.render || renderDashboard;
+  const c = document.getElementById("content");
+  c.innerHTML = "";
+  fn(c);
+  requestAnimationFrame(()=>{
+    if(window.katex) c.querySelectorAll(".formula-render:not([data-rendered])").forEach(el=>{
+      try { katex.render(el.dataset.latex || el.textContent || "", el, { throwOnError:false, displayMode:true }); el.dataset.rendered = "1"; }
+      catch(e){}
+    });
+  });
+}
+
+/* ============ SHELL (bind once) ============ */
+let shellBound = false;
+function setupShell(){
+  if(shellBound) return;
+  shellBound = true;
+  document.querySelectorAll(".nav-link").forEach(a => a.addEventListener("click", e => { e.preventDefault(); navigate(a.dataset.route); }));
+  document.getElementById("menuToggle").addEventListener("click", ()=>{
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("overlay").classList.toggle("open");
+  });
+  document.getElementById("overlay").addEventListener("click", closeSidebarOnMobile);
+  document.getElementById("themeToggle").addEventListener("click", ()=>{
+    const c = state.settings.theme;
+    const n = c === "dark" ? "light" : "dark";
+    updateData(s => s.settings.theme = n);
+    applyTheme(); toast("Theme: " + n, "success"); render();
+  });
+  document.getElementById("switchProfileBtn").addEventListener("click", () => switchProfile());
+  document.getElementById("logoutBtn").addEventListener("click", () => logoutProfile());
+  document.querySelectorAll("[data-close]").forEach(el => el.addEventListener("click", closeModal));
+  document.querySelectorAll("[data-confirm-close]").forEach(el => el.addEventListener("click", () => resolveConfirm(false)));
+  document.getElementById("confirmOk").addEventListener("click", () => resolveConfirm(true));
+  window.addEventListener("hashchange", () => {
+    if(!profileId) return;
+    const r = location.hash.replace("#","") || "dashboard";
+    if(r !== currentRoute) navigate(r);
+  });
+  document.getElementById("todayLabel").textContent = new Date().toLocaleDateString(undefined, { weekday:"short", year:"numeric", month:"short", day:"numeric" });
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { if(state?.settings.theme === "system") applyTheme(); });
+}
+function closeSidebarOnMobile(){
+  document.getElementById("sidebar").classList.remove("open");
+  document.getElementById("overlay").classList.remove("open");
+}
+
+/* ============ BRAND ============ */
+async function refreshBrand(){
+  const logo = document.getElementById("brandLogo");
+  const nameEl = document.getElementById("brandName");
+  if(!state || !logo || !nameEl) return;
+  nameEl.textContent = state.settings.studentName || "Study Planner";
+  document.getElementById("brandSub").textContent = state.settings.stream || "A/L Student";
+  if(state.settings.photoData){
+    logo.innerHTML = `<img src="${state.settings.photoData}" alt="Profile photo"/>`;
+    return;
+  }
+  if(state.settings.photoId){
+    try { const f = await fileDB.get(state.settings.photoId);
+      if(f){ const blob = new Blob([f.data], { type: f.type }); const url = URL.createObjectURL(blob); logo.innerHTML = `<img src="${url}" alt="Profile photo"/>`; return; }
+    } catch(e){}
+  }
+  logo.innerHTML = "A/L";
+}
+
+function fileToDataURL(file){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ""));
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function cropPhotoFile(file){
+  return new Promise(async resolve => {
+    try {
+      const src = await fileToDataURL(file);
+      const img = new Image();
+      img.decoding = "async";
+      await new Promise((ok, bad) => { img.onload = ok; img.onerror = bad; img.src = src; });
+
+      const W = 320, H = 320;
+      const baseScale = Math.max(W / img.naturalWidth, H / img.naturalHeight);
+      let scale = baseScale;
+      let x = (W - img.naturalWidth * scale) / 2;
+      let y = (H - img.naturalHeight * scale) / 2;
+      const minScale = baseScale;
+      const maxScale = baseScale * 3;
+      let dragging = false, lastX = 0, lastY = 0;
+
+      const clamp = () => {
+        const iw = img.naturalWidth * scale, ih = img.naturalHeight * scale;
+        x = iw <= W ? (W - iw) / 2 : Math.min(0, Math.max(W - iw, x));
+        y = ih <= H ? (H - ih) / 2 : Math.min(0, Math.max(H - ih, y));
+      };
+
+      const draw = () => {
+        const canvas = document.getElementById("photoCropCanvas");
+        if(!canvas) return;
+        const ctx = canvas.getContext("2d");
+        if(!ctx) return;
+        ctx.clearRect(0,0,W,H);
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--surface-2").trim() || "#eef1f5";
+        ctx.fillRect(0,0,W,H);
+        ctx.drawImage(img, x, y, img.naturalWidth * scale, img.naturalHeight * scale);
+        ctx.strokeStyle = "rgba(255,255,255,.92)";
+        ctx.lineWidth = 1;
+        for(const p of [W/3, W*2/3]){ ctx.beginPath(); ctx.moveTo(p,0); ctx.lineTo(p,H); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0,p); ctx.lineTo(W,p); ctx.stroke(); }
+        ctx.strokeStyle = "rgba(255,255,255,1)";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(1,1,W-2,H-2);
+      };
+
+      const finish = value => { try{ closeModal(); }catch(_){} resolve(value || null); };
+
+      openModal({
+        title: "Crop Profile Photo",
+        size: "small",
+        bodyHTML: `<div class="photo-crop-wrap">
+          <canvas id="photoCropCanvas" class="photo-crop-canvas" width="320" height="320" aria-label="Profile photo crop area"></canvas>
+          <div class="photo-crop-help">Drag the photo to choose the part you want. Use the slider to zoom.</div>
+          <input class="photo-crop-zoom" id="photoCropZoom" type="range" min="0" max="100" value="0" aria-label="Zoom photo" />
+        </div>`,
+        footerHTML: `<button class="btn ghost" id="photoCropCancel">Cancel</button><button class="btn primary" id="photoCropSave">Save Crop</button>`,
+        onMount: (body, footer) => {
+          const canvas = body.querySelector("#photoCropCanvas");
+          const zoom = body.querySelector("#photoCropZoom");
+          draw();
+
+          const setScaleFromZoom = value => {
+            const pct = Number(value) / 100;
+            const centerX = x + (img.naturalWidth * scale) / 2;
+            const centerY = y + (img.naturalHeight * scale) / 2;
+            scale = minScale + (maxScale - minScale) * pct;
+            x = centerX - (img.naturalWidth * scale) / 2;
+            y = centerY - (img.naturalHeight * scale) / 2;
+            clamp();
+            draw();
+          };
+
+          canvas.addEventListener("pointerdown", e => {
+            dragging = true;
+            lastX = e.clientX; lastY = e.clientY;
+            canvas.classList.add("dragging");
+            canvas.setPointerCapture?.(e.pointerId);
+          });
+          canvas.addEventListener("pointermove", e => {
+            if(!dragging) return;
+            x += e.clientX - lastX; y += e.clientY - lastY;
+            lastX = e.clientX; lastY = e.clientY;
+            clamp(); draw();
+          });
+          const stopDrag = e => {
+            dragging = false;
+            canvas.classList.remove("dragging");
+            try{ canvas.releasePointerCapture?.(e.pointerId); }catch(_){}
+          };
+          canvas.addEventListener("pointerup", stopDrag);
+          canvas.addEventListener("pointercancel", stopDrag);
+          zoom.addEventListener("input", e => setScaleFromZoom(e.target.value));
+
+          footer.querySelector("#photoCropCancel").addEventListener("click", () => finish(null));
+          footer.querySelector("#photoCropSave").addEventListener("click", () => {
+            const out = document.createElement("canvas");
+            out.width = 240; out.height = 240;
+            const ctx = out.getContext("2d", { alpha:false });
+            if(!ctx) return finish(null);
+            const sx = Math.max(0, Math.min(img.naturalWidth - 1, -x / scale));
+            const sy = Math.max(0, Math.min(img.naturalHeight - 1, -y / scale));
+            const sw = Math.min(img.naturalWidth - sx, W / scale);
+            const sh = Math.min(img.naturalHeight - sy, H / scale);
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0,0,240,240);
+            ctx.drawImage(img, sx, sy, sw, sh, 0, 0, 240, 240);
+            finish(out.toDataURL("image/jpeg", .82));
+          });
+        }
+      });
+    } catch(e){
+      resolve(null);
+    }
+  });
+}
+
+async function makePhotoDataURL(file, maxSide=240, quality=.68){
+  const src = await fileToDataURL(file);
+  const img = new Image();
+  img.decoding = "async";
+  await new Promise((resolve,reject)=>{ img.onload=resolve; img.onerror=reject; img.src=src; });
+  const sourceW = img.naturalWidth || img.width || 1;
+  const sourceH = img.naturalHeight || img.height || 1;
+  const scale = Math.min(1, maxSide / Math.max(sourceW, sourceH));
+  const w = Math.max(1, Math.round(sourceW * scale));
+  const h = Math.max(1, Math.round(sourceH * scale));
+  const canvas = document.createElement("canvas");
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext("2d", { alpha:false });
+  if(!ctx) throw new Error("Canvas unavailable");
+  ctx.drawImage(img, 0, 0, w, h);
+  let out = canvas.toDataURL("image/jpeg", quality);
+  // Keep the registry thumbnail small enough for localStorage across mobile browsers.
+  if(out.length > 90000) out = canvas.toDataURL("image/jpeg", .5);
+  if(out.length > 90000){
+    const smaller = document.createElement("canvas");
+    const ratio = 160 / Math.max(w, h);
+    smaller.width = Math.max(1, Math.round(w * ratio));
+    smaller.height = Math.max(1, Math.round(h * ratio));
+    const sctx = smaller.getContext("2d", { alpha:false });
+    if(!sctx) throw new Error("Canvas unavailable");
+    sctx.drawImage(canvas, 0, 0, smaller.width, smaller.height);
+    out = smaller.toDataURL("image/jpeg", .5);
+  }
+  return out;
+}
+
+async function getPhotoData(settings){
+  if(settings?.photoData) return settings.photoData;
+  if(settings?.photoId){
+    try {
+      const f = await fileDB.get(settings.photoId);
+      if(f){
+        const blob = new Blob([f.data], {type:f.type || "image/*"});
+        return await fileToDataURL(blob);
+      }
+    } catch(e){}
+  }
+  return "";
+}
+function syncProfileMeta(){
+  if(!profileId || !state) return;
+  const p = getActiveProfileMeta();
+  if(!p) return;
+  p.name = state.settings.studentName || p.name || "";
+  p.stream = state.settings.stream || p.stream || "";
+  p.examYear = state.settings.examYear || p.examYear || "";
+  p.photoData = state.settings.photoData || p.photoData || "";
+  if(window.ALStudyPlannerCloud?.enabled && cloudProfile === p){
+    cloudProfile = { ...p };
+    return;
+  }
+  saveRoot();
+}
+
+/* ============ DATE / TIME ============ */
+function isoDate(d){ const z = new Date(d.getTime() - d.getTimezoneOffset()*60000); return z.toISOString().slice(0,10); }
+function timeToMin(t){ const [h,m] = t.split(":").map(Number); return h*60+m; }
+function minToTime(m){ const h = Math.floor(m/60), mm = m%60; return `${String(h).padStart(2,"0")}:${String(mm).padStart(2,"0")}`; }
+function addMinutes(t,m){ return minToTime(timeToMin(t) + m); }
+function fmtHours(min){ const h = min/60; return h ? h.toFixed(1)+"h" : "0h"; }
+function fmtHMS(s){ const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), ss = s%60; return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(ss).padStart(2,"0")}`; }
+function shortDate(iso){ if(!iso) return ""; const d = new Date(iso); return d.toLocaleDateString(undefined, { month:"short", day:"numeric" }); }
+function getWeekStart(date){
+  const d = new Date(date); d.setHours(0,0,0,0);
+  const day = d.getDay();
+  const diff = state.settings.timetable.weekStart === "Sun" ? day : (day === 0 ? 6 : day - 1);
+  d.setDate(d.getDate() - diff);
+  return d;
+}
+function weekdayName(d){ return ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][d.getDay()]; }
+
+/* ============ DASHBOARD ============ */
+function renderDashboard(rootEl){
+  const today = new Date();
+  today.setSeconds(0,0);
+  const todayName = weekdayName(today);
+  const todayStr = isoDate(today);
+  const safeMin = v => {
+    const n = Number(v);
+    return Number.isFinite(n) ? Math.max(0, n) : 0;
+  };
+  const safeTime = v => {
+    const raw = String(v || "").trim();
+    const m = raw.match(/^(\d{1,2}):(\d{2})$/);
+    if(!m) return null;
+    const h = Number(m[1]), min = Number(m[2]);
+    return h >= 0 && h <= 23 && min >= 0 && min <= 59 ? h * 60 + min : null;
+  };
+  const todaysEvents = (state.timetableEvents || [])
+    .filter(e => e && e.day === todayName)
+    .map(e => ({...e, _startMin:safeTime(e.startTime), _endMin:safeTime(e.endTime)}))
+    .filter(e => e._startMin !== null && e._endMin !== null && e._endMin > e._startMin)
+    .sort((a,b) => a._startMin - b._startMin);
+  const todaysSessions = (state.studySessions || []).filter(s => sessionDateKey(s) === todayStr);
+  const nowMin = today.getHours()*60 + today.getMinutes();
+  const currentEvent = todaysEvents.find(e => e._startMin <= nowMin && e._endMin > nowMin) || null;
+  const upcoming = currentEvent ? null : (todaysEvents.find(e => e._startMin > nowMin) || null);
+  const weekStartStr = isoDate(getWeekStart(today));
+  const weeklyMin = (state.studySessions || [])
+    .filter(s => {
+      const d = sessionDateKey(s);
+      return d && d >= weekStartStr && d <= todayStr;
+    })
+    .reduce((total,s) => total + safeMin(sessionMinutes(s)), 0);
+  const todayMin = todaysSessions.reduce((total,s) => total + safeMin(sessionMinutes(s)), 0);
+  const dailyTarget = Math.max(0, Number(state.settings.dailyTarget) || 0);
+  const weeklyTarget = dailyTarget * 7 * 60;
+  const weeklyPct = weeklyTarget ? Math.min(100, Math.round((weeklyMin / weeklyTarget) * 100)) : 0;
+  const recentFormulas = [...(state.formulas || [])]
+    .sort((a,b) => String(b.createdAt || b.updatedAt || "").localeCompare(String(a.createdAt || a.updatedAt || "")))
+    .slice(0,3);
+  const recentNotes = [...(state.notes || [])]
+    .sort((a,b) => String(b.updatedAt || b.createdAt || "").localeCompare(String(a.updatedAt || a.createdAt || "")))
+    .slice(0,3);
+  const photoHTML = state.settings.photoData
+    ? `<div class="photo-circle"><img src="${esc(state.settings.photoData)}" alt="Profile photo"/></div>`
+    : `<div class="photo-circle" id="dashPhoto">👤</div>`;
+
+  rootEl.innerHTML = `
+    <div class="card" style="margin-bottom:16px;display:flex;gap:14px;align-items:center">
+      ${photoHTML}
+      <div style="flex:1;min-width:0">
+        <div style="font-size:18px;font-weight:700">${state.settings.studentName ? ("Hello, " + esc(state.settings.studentName)) : "Welcome back"}</div>
+        <div class="muted">${state.settings.stream ? esc(state.settings.stream) : "A/L Student"}${state.settings.examYear ? " • Exam " + esc(state.settings.examYear) : ""}</div>
+        <div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap">
+          <span class="pill">${(state.studySessions || []).length} sessions</span>
+          <span class="pill">${(state.formulas || []).length} formulas</span>
+          <span class="pill">${(state.notes || []).length} notes</span>
+        </div>
+      </div>
+    </div>
+    <div class="grid cols-3" style="margin-bottom:16px">
+      <div class="stat"><div class="stat-label">Today's Study</div><div class="stat-value">${fmtHours(todayMin)}</div><div class="stat-sub">${todaysSessions.length} session(s)${dailyTarget ? " • target " + dailyTarget + "h" : ""}</div></div>
+      <div class="stat"><div class="stat-label">This Week</div><div class="stat-value">${fmtHours(weeklyMin)}</div><div class="stat-sub">${dailyTarget ? "Target " + (dailyTarget*7) + "h" : "No daily target set"}</div></div>
+      <div class="stat"><div class="stat-label">Subjects</div><div class="stat-value">${(state.subjects || []).length}</div><div class="stat-sub">${(state.formulas || []).length} formulas</div></div>
+    </div>
+    <div class="grid cols-3" style="margin-bottom:16px">
+      <div class="card"><div class="section-title"><h2>Today</h2><span class="muted">${todayName}</span></div>
+        ${todaysEvents.length === 0 ? `<div class="empty">No events today. Add your first class or study block.</div>` : todaysEvents.map(e => `<div style="display:flex;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--border)"><span style="width:8px;height:8px;border-radius:50%;background:${esc(e.color||subjectColor(e.subjectId)||"#94a3b8")};flex-shrink:0"></span><div style="flex:1;min-width:0"><div style="font-size:13.5px">${esc(e.title||"Event")}</div><div class="muted">${esc(e.startTime)}–${esc(e.endTime)}${e.subjectId ? " • " + esc(subjectName(e.subjectId)) : ""}</div></div></div>`).join("")}
+        ${currentEvent ? `<div class="muted" style="margin-top:10px">🟢 Now: <strong>${esc(currentEvent.title || "Event")}</strong> until ${esc(currentEvent.endTime)}</div>` : upcoming ? `<div class="muted" style="margin-top:10px">⏭ Up next: <strong>${esc(upcoming.title || "Event")}</strong> at ${esc(upcoming.startTime)}</div>` : `<div class="muted" style="margin-top:10px">No upcoming event left today.</div>`}
+      </div>
+      <div class="card"><div class="section-title"><h2>Study Progress</h2><span class="muted">This week</span></div>
+        <div style="font-size:24px;font-weight:700;margin:4px 0">${fmtHours(weeklyMin)}</div>
+        <div class="muted">Weekly target: ${dailyTarget ? (dailyTarget*7) + "h" : "Not set"}</div>
+        <div class="progress" style="margin-top:12px"><span style="width:${weeklyPct}%"></span></div>
+        <div class="muted" style="margin-top:8px">${weeklyPct}% of weekly target</div>
+      </div>
+      <div class="card"><div class="section-title"><h2>Quick Actions</h2></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <button class="btn primary" data-qa="event">+ Event</button>
+          <button class="btn" data-qa="formula">+ Formula</button>
+          <button class="btn" data-qa="note">+ Note</button>
+          <button class="btn" data-qa="session">+ Study</button>
+        </div>
+      </div>
+    </div>
+    <div class="grid cols-2">
+      <div class="card"><div class="section-title"><h2>Recent Formulas</h2><button class="btn ghost small" data-go="formulas">View all →</button></div>
+        ${recentFormulas.length === 0 ? `<div class="empty">No formulas yet. Start building your formula book.</div>` : recentFormulas.map(f => `<div style="padding:7px 0;border-bottom:1px solid var(--border)"><div style="font-size:13.5px;font-weight:600">${esc(f.title || "Untitled Formula")}</div><div class="muted">${esc(subjectName(f.subjectId))}${f.chapter ? " • " + esc(f.chapter) : ""}</div></div>`).join("")}
+      </div>
+      <div class="card"><div class="section-title"><h2>Recent Notes</h2><button class="btn ghost small" data-go="notes">View all →</button></div>
+        ${recentNotes.length === 0 ? `<div class="empty">No notes yet. Save important study notes here.</div>` : recentNotes.map(n => `<div style="padding:7px 0;border-bottom:1px solid var(--border)"><div style="font-size:13.5px;font-weight:600">${esc(n.title || "Untitled Note")}</div><div class="muted">${esc(subjectName(n.subjectId))}${n.chapter ? " • " + esc(n.chapter) : ""}${n.updatedAt ? " • " + shortDate(n.updatedAt) : ""}</div></div>`).join("")}
+      </div>
+    </div>`;
+
+  // Keep the dashboard photo in sync for older profiles that still store the image in IndexedDB.
+  if(!state.settings.photoData && state.settings.photoId){
+    const el = document.getElementById("dashPhoto");
+    getPhotoData(state.settings).then(data => {
+      if(data && el){
+        el.innerHTML = `<img src="${esc(data)}" alt="Profile photo"/>`;
+        state.settings.photoData = data;
+        syncProfileMeta();
+        saveData();
+      }
+    }).catch(()=>{});
+  }
+  rootEl.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => navigate(b.dataset.go)));
+  rootEl.querySelectorAll("[data-qa]").forEach(b => b.addEventListener("click", () => {
+    const a = b.dataset.qa;
+    if(a==="event"){ navigate("timetable"); requestAnimationFrame(() => openEventModal()); }
+    if(a==="formula"){ navigate("formulas"); requestAnimationFrame(() => openFormulaModal()); }
+    if(a==="note"){ navigate("notes"); requestAnimationFrame(() => openNoteModal()); }
+    if(a==="session"){ navigate("study"); requestAnimationFrame(() => openSessionModal()); }
+  }));
+}
+
+/* ============ TIMETABLE ============ */
+let ttView = "week";
+let ttMonthYear = new Date().getFullYear();
+let ttMonthMonth = new Date().getMonth();
+
+function time12Parts(value){
+  const [hh,mm] = String(value || "06:00").split(":").map(Number);
+  const h24 = Number.isFinite(hh) ? hh : 6;
+  const minute = Number.isFinite(mm) ? mm : 0;
+  return { hour: h24 % 12 || 12, minute: Math.max(0, Math.min(59, minute)), ampm: h24 >= 12 ? "PM" : "AM" };
+}
+function time12Label(value){
+  const p = time12Parts(value);
+  return `${String(p.hour).padStart(2,"0")}:${String(p.minute).padStart(2,"0")} ${p.ampm}`;
+}
+function time12PickerHTML(prefix, value){
+  const p = time12Parts(value);
+  return `<span style="display:inline-flex;gap:4px;align-items:center;flex-wrap:nowrap">
+    <select id="${prefix}Hour" class="tt-time-select" style="width:64px;min-width:64px" aria-label="${prefix} hour">${Array.from({length:12},(_,i)=>i+1).map(h=>`<option value="${h}" ${h===p.hour?"selected":""}>${String(h).padStart(2,"0")}</option>`).join("")}</select>
+    <span class="muted">:</span>
+    <select id="${prefix}Minute" class="tt-time-select" style="width:64px;min-width:64px" aria-label="${prefix} minute">${Array.from({length:60},(_,i)=>i).map(m=>`<option value="${m}" ${m===p.minute?"selected":""}>${String(m).padStart(2,"0")}</option>`).join("")}</select>
+    <select id="${prefix}AmPm" class="tt-time-select" style="width:72px;min-width:72px" aria-label="${prefix} AM or PM"><option value="AM" ${p.ampm==="AM"?"selected":""}>AM</option><option value="PM" ${p.ampm==="PM"?"selected":""}>PM</option></select>
+  </span>`;
+}
+function time12Value(prefix, rootEl){
+  let h = parseInt(rootEl.querySelector(`#${prefix}Hour`).value, 10);
+  const m = parseInt(rootEl.querySelector(`#${prefix}Minute`).value, 10);
+  const ap = rootEl.querySelector(`#${prefix}AmPm`).value;
+  if(h === 12) h = 0;
+  if(ap === "PM") h += 12;
+  return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+}
+function setTime12Picker(prefix, value, rootEl){
+  const p = time12Parts(value);
+  rootEl.querySelector(`#${prefix}Hour`).value = String(p.hour);
+  rootEl.querySelector(`#${prefix}Minute`).value = String(p.minute);
+  rootEl.querySelector(`#${prefix}AmPm`).value = p.ampm;
+}
+
+function renderTimetable(rootEl){
+  const tt = state.settings.timetable;
+  const dayNames = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const todayName = weekdayName(new Date());
+  rootEl.innerHTML = `
+    <div class="toolbar">
+      <button class="btn primary" id="ttAdd">+ Add Event</button>
+      <button class="btn ${ttView==="week"?"primary":""}" data-ttview="week">📋 Week</button>
+      <button class="btn ${ttView==="month"?"primary":""}" data-ttview="month">📅 Month</button>
+      ${ttView==="week" ? `
+        <button class="btn" id="ttToday">Today</button>
+        <button class="btn" id="ttPrint">🖨️ Print</button>
+        <span class="muted">Week time</span>
+        ${time12PickerHTML("ttWeekStart", tt.start)}
+        <span class="muted">to</span>
+        ${time12PickerHTML("ttWeekEnd", tt.end)}
+        <select id="ttWeekInterval" class="tt-time-select" aria-label="Week time interval">
+          <option value="15" ${tt.interval===15?"selected":""}>15 min</option>
+          <option value="30" ${tt.interval===30?"selected":""}>30 min</option>
+          <option value="45" ${tt.interval===45?"selected":""}>45 min</option>
+          <option value="60" ${tt.interval===60?"selected":""}>60 min</option>
+          <option value="90" ${tt.interval===90?"selected":""}>90 min</option>
+        </select>
+        <select id="ttWeekPreset" class="tt-time-select" aria-label="Week time preset">
+          <option value="">Preset</option>
+          <option value="05:00|22:00">05:00–22:00</option>
+          <option value="06:00|21:00">06:00–21:00</option>
+          <option value="07:00|20:00">07:00–20:00</option>
+          <option value="08:00|18:00">08:00–18:00</option>
+        </select>
+        <button class="btn small" id="ttApplyTime">Apply</button>
+        <span class="muted" style="margin-left:auto">${time12Label(tt.start)}–${time12Label(tt.end)} • ${tt.interval}min</span>
+      ` : `
+        <button class="btn" id="ttPrevMonth">←</button>
+        <button class="btn" id="ttCurMonth">This Month</button>
+        <button class="btn" id="ttNextMonth">→</button>
+        <span class="muted" style="margin-left:auto" id="ttMonthLabel"></span>
+      `}
+    </div>
+    <div id="ttBody"></div>`;
+  rootEl.querySelectorAll("[data-ttview]").forEach(b => b.addEventListener("click", () => { ttView = b.dataset.ttview; renderTimetable(rootEl); }));
+  rootEl.querySelector("#ttAdd").addEventListener("click", () => openEventModal());
+  if(ttView === "week") {
+    const intervalIn = rootEl.querySelector("#ttWeekInterval");
+    const presetIn = rootEl.querySelector("#ttWeekPreset");
+    presetIn.addEventListener("change", () => {
+      if(!presetIn.value) return;
+      const [start, end] = presetIn.value.split("|");
+      setTime12Picker("ttWeekStart", start, rootEl);
+      setTime12Picker("ttWeekEnd", end, rootEl);
+      presetIn.value = "";
+    });
+    rootEl.querySelector("#ttApplyTime").addEventListener("click", () => {
+      const start = time12Value("ttWeekStart", rootEl);
+      const end = time12Value("ttWeekEnd", rootEl);
+      const interval = parseInt(intervalIn.value, 10);
+      if(!start || !end) return toast("Start and end time required", "error");
+      if(timeToMin(end) <= timeToMin(start)) return toast("End must be after start", "error");
+      if(![15,30,45,60,90].includes(interval)) return toast("Invalid interval", "error");
+      updateData(s => { s.settings.timetable.start = start; s.settings.timetable.end = end; s.settings.timetable.interval = interval; });
+      renderTimetable(document.getElementById("content"));
+      toast("Week time updated", "success");
+    });
+  }
+  const body = rootEl.querySelector("#ttBody");
+  if(ttView === "week") renderWeekView(body, tt, dayNames, todayName);
+  else renderMonthView(body);
+}
+function renderWeekView(container, tt, dayNames, todayName){
+  const slots = buildSlots(tt.start, tt.end, tt.interval);
+  container.innerHTML = `<div class="timetable-wrap" id="ttWrap"><table class="timetable"><thead><tr><th class="time-col">Time</th>${dayNames.map(d => `<th class="${d===todayName?"today":""}">${d}</th>`).join("")}</tr></thead>
+    <tbody>${slots.map(slot => `<tr><td class="time-col">${slot.label}</td>${dayNames.map(day => { const evs = eventsInSlot(day, slot.start, slot.end); return `<td class="slot ${day===todayName?"today-col":""}" data-day="${day}" data-start="${slot.start}">${evs.map(e => eventChipHTML(e)).join("")}</td>`; }).join("")}</tr>`).join("")}</tbody></table></div>`;
+  requestAnimationFrame(() => drawNowLine(container, tt));
+  container.querySelectorAll("td.slot").forEach(td => td.addEventListener("click", e => { if(e.target.closest(".event-chip")) return; openEventModal(null, { day: td.dataset.day, startTime: td.dataset.start }); }));
+  container.querySelectorAll(".event-chip").forEach(ch => ch.addEventListener("click", e => { e.stopPropagation(); openEventModal(ch.dataset.id); }));
+  const todayBtn = document.getElementById("ttToday");
+  if(todayBtn) todayBtn.addEventListener("click", () => { const el = container.querySelector(".today-col") || container.querySelector(".timetable th.today"); if(el) el.scrollIntoView({ behavior:"smooth", block:"center", inline:"center" }); });
+  const printBtn = document.getElementById("ttPrint");
+  if(printBtn) printBtn.addEventListener("click", () => window.print());
+}
+function renderMonthView(container){
+  const y = ttMonthYear, m = ttMonthMonth;
+  const firstDay = new Date(y, m, 1);
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+  const monthLabel = firstDay.toLocaleDateString(undefined, { month:"long", year:"numeric" });
+  const lbl = document.getElementById("ttMonthLabel"); if(lbl) lbl.textContent = monthLabel;
+  document.getElementById("ttPrevMonth").addEventListener("click", () => { ttMonthMonth--; if(ttMonthMonth < 0){ ttMonthMonth = 11; ttMonthYear--; } renderTimetable(document.getElementById("content")); });
+  document.getElementById("ttNextMonth").addEventListener("click", () => { ttMonthMonth++; if(ttMonthMonth > 11){ ttMonthMonth = 0; ttMonthYear++; } renderTimetable(document.getElementById("content")); });
+  document.getElementById("ttCurMonth").addEventListener("click", () => { const d = new Date(); ttMonthYear = d.getFullYear(); ttMonthMonth = d.getMonth(); renderTimetable(document.getElementById("content")); });
+  const weekStart = state.settings.timetable.weekStart;
+  const dayNames = weekStart === "Sun" ? ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"] : ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const dow = firstDay.getDay();
+  const offset = weekStart === "Sun" ? dow : (dow === 0 ? 6 : dow - 1);
+  const todayStr = isoDate(new Date());
+  let cells = "";
+  for(let i = 0; i < offset; i++) cells += `<div class="cal-cell other"></div>`;
+  for(let d = 1; d <= daysInMonth; d++){
+    const date = new Date(y, m, d);
+    const dayName = weekdayName(date);
+    const events = state.timetableEvents.filter(e => e.day === dayName).sort((a,b) => a.startTime.localeCompare(b.startTime));
+    const isToday = isoDate(date) === todayStr;
+    cells += `<div class="cal-cell ${isToday?"today":""}" data-date="${isoDate(date)}" data-day="${dayName}">
+      <div class="cal-date">${d}</div>
+      <div class="cal-events">
+        ${events.slice(0,3).map(e => `<div class="cal-event" style="background:${e.color||subjectColor(e.subjectId)}" title="${esc(e.title||"")} ${e.startTime}–${e.endTime}">${e.startTime} ${esc(e.title||"Event")}</div>`).join("")}
+        ${events.length > 3 ? `<div class="cal-more">+${events.length-3} more</div>` : ""}
+      </div>
+    </div>`;
+  }
+  let total = offset + daysInMonth;
+  while(total % 7 !== 0){ cells += `<div class="cal-cell other"></div>`; total++; }
+  container.innerHTML = `<div class="card calendar-scroll"><div class="cal-grid">${dayNames.map(d => `<div class="cal-head">${d}</div>`).join("")}${cells}</div></div>`;
+  container.querySelectorAll(".cal-cell[data-date]").forEach(cell => cell.addEventListener("click", () => openDayModal(cell.dataset.date, cell.dataset.day)));
+}
+function openDayModal(dateStr, dayName){
+  const events = state.timetableEvents.filter(e => e.day === dayName).sort((a,b) => a.startTime.localeCompare(b.startTime));
+  const d = new Date(dateStr + "T00:00");
+  openModal({
+    title: d.toLocaleDateString(undefined, { weekday:"long", month:"long", day:"numeric", year:"numeric" }),
+    bodyHTML: events.length === 0 ? `<div class="empty">No events on ${dayName}.</div>` : events.map(e => `
+      <div class="q-row" style="cursor:pointer" data-ev-id="${e.id}">
+        <span style="width:10px;height:10px;border-radius:50%;background:${e.color||subjectColor(e.subjectId)};flex-shrink:0"></span>
+        <span class="q-num">${e.startTime}</span>
+        <span style="flex:1">${esc(e.title||subjectName(e.subjectId)||"Event")}</span>
+        <span class="muted">${e.endTime}${e.type?" • "+esc(e.type):""}</span>
+      </div>`).join(""),
+    footerHTML: `<button class="btn ghost" data-close="1">Close</button><button class="btn primary" id="dayAdd">+ Add Event</button>`,
+    onMount: (body, footer) => {
+      footer.querySelector("[data-close]").addEventListener("click", closeModal);
+      footer.querySelector("#dayAdd").addEventListener("click", () => { closeModal(); openEventModal(null, { day: dayName, startTime: "08:00" }); });
+      body.querySelectorAll("[data-ev-id]").forEach(row => row.addEventListener("click", () => { closeModal(); openEventModal(row.dataset.evId); }));
+    }
+  });
+}
+function buildSlots(start, end, interval){
+  const out = []; let cur = timeToMin(start); const endMin = timeToMin(end);
+  if(endMin <= cur || interval <= 0) return out;
+  while(cur < endMin){
+    const next = Math.min(cur + interval, endMin);
+    out.push({ start: minToTime(cur), end: minToTime(next), label: minToTime(cur) });
+    cur = next;
+  }
+  return out;
+}
+function eventsInSlot(day, start, end){
+  const s = timeToMin(start), e = timeToMin(end);
+  return state.timetableEvents.filter(ev => ev.day === day).filter(ev => { const es = timeToMin(ev.startTime), ee = timeToMin(ev.endTime); return es < e && ee > s; }).sort((a,b) => a.startTime.localeCompare(b.startTime));
+}
+function eventChipHTML(e){
+  const c = e.color || subjectColor(e.subjectId) || "#94a3b8";
+  return `<span class="event-chip" data-id="${e.id}" style="background:${c}">${esc(e.title||subjectName(e.subjectId)||"Event")}<small>${e.startTime}–${e.endTime}</small></span>`;
+}
+function drawNowLine(rootEl, tt){
+  const wrap = rootEl.querySelector(".timetable-wrap");
+  if(!wrap) return;
+  const now = new Date();
+  const nowMin = now.getHours()*60 + now.getMinutes();
+  const startMin = timeToMin(tt.start), endMin = timeToMin(tt.end);
+  if(nowMin < startMin || nowMin > endMin) return;
+  const firstSlot = wrap.querySelector("tbody td.slot");
+  if(!firstSlot) return;
+  const slotH = firstSlot.getBoundingClientRect().height;
+  const rowsAbove = Math.floor((nowMin - startMin) / tt.interval);
+  const frac = ((nowMin - startMin) % tt.interval) / tt.interval;
+  const top = rowsAbove * slotH + frac * slotH;
+  const dayIndex = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].indexOf(weekdayName(now));
+  if(dayIndex < 0) return;
+  const ths = wrap.querySelectorAll("thead th");
+  let left = ths[0].getBoundingClientRect().width;
+  for(let i = 1; i <= dayIndex; i++) left += ths[i].getBoundingClientRect().width;
+  const width = ths[dayIndex+1].getBoundingClientRect().width;
+  const line = document.createElement("div");
+  line.className = "now-line";
+  line.style.top = top + "px"; line.style.left = left + "px"; line.style.width = width + "px";
+  wrap.appendChild(line);
+}
+function openEventModal(id = null, preset = {}){
+  const editing = id ? getItem("timetableEvents", id) : null;
+  const e = editing || { subjectId: state.subjects[0]?.id || "", title: "", day: preset.day || "Mon", startTime: preset.startTime || "08:00", endTime: addMinutes(preset.startTime || "08:00", 60), type: "Study", notes: "", color: "" };
+  const days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const types = ["Study","Class","Revision","Paper","Break","Other"];
+  const useSubjectColor = !e.color;
+  const defaultColor = e.color || subjectColor(e.subjectId) || "#3b6ef6";
+  openModal({
+    title: editing ? "Edit Event" : "Add Event",
+    bodyHTML: `
+      <div class="form-row"><label>Title</label><input id="evTitle" value="${esc(e.title)}" /></div>
+      <div class="form-row inline">
+        <div><label>Subject</label><select id="evSubject"><option value="">— None —</option>${state.subjects.map(s => `<option value="${s.id}" ${s.id===e.subjectId?"selected":""}>${esc(s.name)}</option>`).join("")}</select></div>
+        <div><label>Type</label><select id="evType">${types.map(t => `<option ${t===e.type?"selected":""}>${t}</option>`).join("")}</select></div>
+      </div>
+      <div class="form-row"><label>Day</label><select id="evDay">${days.map(d => `<option ${d===e.day?"selected":""}>${d}</option>`).join("")}</select></div>
+      <div class="form-row inline"><div><label>Start</label><input type="time" id="evStart" value="${e.startTime}" /></div><div><label>End</label><input type="time" id="evEnd" value="${e.endTime}" /></div></div>
+      <div class="form-row"><label>Color</label>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <input type="color" id="evColor" value="${defaultColor}" style="width:60px;height:38px;padding:2px;flex-shrink:0" />
+          <label style="display:flex;gap:6px;align-items:center;margin:0;font-size:13px;color:var(--text)"><input type="checkbox" id="evUseSubject" ${useSubjectColor?"checked":""} style="width:auto" /> Use subject color</label>
+          <button type="button" class="btn small" id="evResetColor">Reset</button>
+        </div>
+        <div class="muted" style="margin-top:4px">Preview: <span id="evColorPreview" style="display:inline-block;width:60px;height:14px;border-radius:4px;vertical-align:middle;background:${defaultColor}"></span></div>
+      </div>
+      <div class="form-row"><label>Notes</label><textarea id="evNotes">${esc(e.notes)}</textarea></div>`,
+    footerHTML: `${editing ? '<button class="btn danger" id="evDelete">Delete</button>' : ""}<button class="btn ghost" data-close="1">Cancel</button><button class="btn primary" id="evSave">Save</button>`,
+    onMount: (b, f) => {
+      const useSub = b.querySelector("#evUseSubject");
+      const colorIn = b.querySelector("#evColor");
+      const preview = b.querySelector("#evColorPreview");
+      const syncPreview = () => { preview.style.background = useSub.checked ? (subjectColor(b.querySelector("#evSubject").value) || "#94a3b8") : colorIn.value; };
+      useSub.addEventListener("change", syncPreview);
+      colorIn.addEventListener("input", () => { useSub.checked = false; syncPreview(); });
+      b.querySelector("#evSubject").addEventListener("change", syncPreview);
+      b.querySelector("#evResetColor").addEventListener("click", () => { useSub.checked = true; colorIn.value = subjectColor(b.querySelector("#evSubject").value) || "#3b6ef6"; syncPreview(); });
+      syncPreview();
+      f.querySelector("[data-close]").addEventListener("click", closeModal);
+      f.querySelector("#evSave").addEventListener("click", () => {
+        const p = {
+          title: b.querySelector("#evTitle").value.trim(),
+          subjectId: b.querySelector("#evSubject").value,
+          type: b.querySelector("#evType").value,
+          day: b.querySelector("#evDay").value,
+          startTime: b.querySelector("#evStart").value,
+          endTime: b.querySelector("#evEnd").value,
+          notes: b.querySelector("#evNotes").value.trim(),
+          color: useSub.checked ? "" : colorIn.value
+        };
+        if(!p.title && !p.subjectId) return toast("Title or subject required", "error");
+        if(timeToMin(p.endTime) <= timeToMin(p.startTime)) return toast("End must be after start", "error");
+        if(editing){ updateItem("timetableEvents", id, p); toast("Updated", "success"); }
+        else { addItem("timetableEvents", p); toast("Added", "success"); }
+        closeModal(); render();
+      });
+      const d = f.querySelector("#evDelete");
+      if(d) d.addEventListener("click", async () => { if(await confirmDialog("Delete event?", "Cannot be undone.")){ deleteData("timetableEvents", id); closeModal(); render(); toast("Deleted", "success"); } });
+    }
+  });
+}
+
+/* ============ STREAM SUBJECT HELPERS ============ */
+const IT_SUBJECT = ["Information & Communication Technology","#8b5cf6","💻"];
+const STREAM_SUBJECT_ALIASES = {
+  "Physical Science":["combined mathematics","combined maths","maths","mathematics","physics","chemistry","information & communication technology","information technology","ict","it"],
+  "Biological Science":["biology","bio","chemistry","physics"],
+  "Commerce":["accounting","accounts","business studies","business","economics","information & communication technology","information technology","ict","it"],
+  "Arts":["history","geography","political science","politics","economics","logic & scientific method","logic and scientific method","civic education","sinhala","english literature","buddhist civilization","information & communication technology","information technology","ict","it"],
+  "Technology":["engineering technology","science for technology","information & communication technology","information technology","ict","it","technology"]
+};
+const STREAM_SUBJECT_PRESETS = {
+  "Physical Science":[["Combined Mathematics","#3b6ef6","📐"],["Physics","#8b5cf6","⚛️"],["Chemistry","#10b981","🧪"],IT_SUBJECT],
+  "Biological Science":[["Biology","#16a34a","🧬"],["Chemistry","#10b981","🧪"],["Physics","#8b5cf6","⚛️"]],
+  "Commerce":[["Accounting","#0ea5e9","💰"],["Business Studies","#f59e0b","💼"],["Economics","#8b5cf6","📈"],IT_SUBJECT],
+  "Arts":[["History","#b45309","📜"],["Geography","#16a34a","🌍"],["Political Science","#3b6ef6","🏛️"],["Economics","#8b5cf6","📈"],IT_SUBJECT],
+  "Technology":[["Engineering Technology","#2563eb","⚙️"],["Science for Technology","#10b981","🔬"],["Information & Communication Technology","#8b5cf6","💻"]]
+};
+function ensureStreamSubjects() {
+  if(!state || !Array.isArray(state.subjects)) return false;
+  const presets = STREAM_SUBJECT_PRESETS[String(state.settings.stream || "").trim()] || [];
+  if(!presets.length) return false;
+  let changed = false;
+  for(const [name,color,icon] of presets){
+    const normalizedName = normalizeSubjectName(name);
+    const deleted = Array.isArray(state.settings.deletedStarterSubjects) && state.settings.deletedStarterSubjects.includes(normalizedName);
+    const exists = state.subjects.some(s => normalizeSubjectName(s.name) === normalizedName);
+    if(!exists && !deleted){ state.subjects.push({id:uid("sub"), name, color, icon}); changed = true; }
+  }
+  if(changed) saveData();
+  return changed;
+}
+function normalizeSubjectName(name){ return String(name||"").toLowerCase().replace(/&/g," and ").replace(/[^a-z0-9]+/g," ").replace(/\s+/g," ").trim(); }
+function subjectMatchesStream(subjectName, stream){
+  const aliases = STREAM_SUBJECT_ALIASES[stream] || [];
+  const n = normalizeSubjectName(subjectName);
+  return aliases.some(a=>{const x=normalizeSubjectName(a);return n===x || n.includes(x) || x.includes(n);});
+}
+function librarySubjectsForStream(){
+  const stream=String(state.settings.stream||"").trim();
+  const relevant=state.subjects.filter(s=>subjectMatchesStream(s.name,stream));
+  const other=state.subjects.filter(s=>!subjectMatchesStream(s.name,stream));
+  return {stream,relevant,other};
+}
+function subjectFilterOptions(selected=""){
+  const {stream,relevant,other}=librarySubjectsForStream();
+  const label=stream && STREAM_SUBJECT_ALIASES[stream] ? `All ${stream} Subjects` : "All My Subjects";
+  const relevantHtml=relevant.map(s=>`<option value="${esc(s.id)}" ${s.id===selected?"selected":""}>${esc(s.name)}</option>`).join("");
+  const otherHtml=other.length?`<optgroup label="Other saved subjects">${other.map(s=>`<option value="${esc(s.id)}" ${s.id===selected?"selected":""}>${esc(s.name)}</option>`).join("")}</optgroup>`:"";
+  return `<option value="">${label}</option>${relevantHtml}${otherHtml}`;
+}
+function streamSubjectChips(){
+  const {stream,relevant}=librarySubjectsForStream();
+  if(!relevant.length) return `<span class="library-subject-note">Add your ${esc(stream||"stream")} subjects in Settings to see them here.</span>`;
+  return `<div class="library-subject-chips">${relevant.map(s=>`<button type="button" class="library-subject-chip" data-subject-filter="${esc(s.id)}" style="--chip-color:${esc(s.color||"#94a3b8")}"><span style="background:${esc(s.color||"#94a3b8")}"></span>${esc(s.name)}</button>`).join("")}</div>`;
+}
+/* ============ FORMULAS ============ */
+let formulaFilters = { q:"", subject:"", chapter:"", favoritesOnly:false, sort:"recent" };
+function applyFormulaSubjectFilter(subjectId){
+  const valid = !subjectId || state.subjects.some(s => s.id === subjectId);
+  formulaFilters.subject = valid ? subjectId : "";
+  const content = document.getElementById("content");
+  if(content && currentRoute === "formulas") renderFormulas(content);
+  else renderFormulaList();
+}
+function renderFormulas(rootEl){
+  const chapters = [...new Set(state.formulas.map(f => f.chapter).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+  const favCount = state.formulas.filter(f=>f.favorite).length;
+  const subjectCount = new Set(state.formulas.map(f=>f.subjectId).filter(Boolean)).size;
+  rootEl.innerHTML = `
+    <div class="fm-hero">
+      <div class="fm-hero-copy"><div class="fm-kicker">Study Library</div><h2>Formula Book</h2><p>Keep your key formulas, definitions, examples and explanations in one clean revision space.</p><div class="lib-hero-actions"><button class="btn small" id="fmCustomize">🎨 Customize</button></div></div>
+      <div class="fm-stats"><div class="fm-stat clickable" id="fmAllStat" title="Show all formulas"><b>${state.formulas.length}</b><span>Formulas</span></div><div class="fm-stat clickable ${formulaFilters.favoritesOnly?"active":""}" id="fmFavoriteStat" title="Show favorite formulas"><b>${favCount}</b><span>⭐ Favorites</span></div><div class="fm-stat"><b>${subjectCount}</b><span>Subjects</span></div></div>
+    </div>
+    <div class="fm-toolbar">
+      <input type="search" id="fSearch" placeholder="Search title, formula, chapter, topic…" value="${esc(formulaFilters.q)}" />
+      <select id="fSubject">${subjectFilterOptions(formulaFilters.subject)}</select>
+      <select id="fChapter"><option value="">All Chapters</option>${chapters.map(c => `<option value="${esc(c)}" ${c===formulaFilters.chapter?"selected":""}>${esc(c)}</option>`).join("")}</select>
+      <select id="fSort"><option value="recent" ${formulaFilters.sort==="recent"?"selected":""}>Recently added</option><option value="az" ${formulaFilters.sort==="az"?"selected":""}>A → Z</option><option value="fav" ${formulaFilters.sort==="fav"?"selected":""}>Favorites first</option></select>
+      <label class="fm-filter-check"><input type="checkbox" id="fFav" ${formulaFilters.favoritesOnly?"checked":""} /> Favorites</label>
+      <button class="btn primary" id="fAdd">+ Add Formula</button>
+    </div>
+    <div class="library-subject-strip"><div class="library-subject-strip-head"><strong>${esc(state.settings.stream || "Your Stream")} subjects</strong><span class="muted">Quick filter</span></div>${streamSubjectChips()}</div>
+    <div id="formulaList"></div>`;
+  rootEl.querySelector("#fSearch").addEventListener("input", e => { formulaFilters.q=e.target.value; renderFormulaList(); });
+  rootEl.querySelector("#fSubject").addEventListener("change", e => { applyFormulaSubjectFilter(e.target.value); });
+  rootEl.querySelector("#fChapter").addEventListener("change", e => { formulaFilters.chapter=e.target.value; renderFormulaList(); });
+  rootEl.querySelector("#fFav").addEventListener("change", e => { formulaFilters.favoritesOnly=e.target.checked; renderFormulas(document.getElementById("content")); });
+  rootEl.querySelector("#fmAllStat").addEventListener("click", () => { formulaFilters.favoritesOnly=false; renderFormulas(document.getElementById("content")); });
+  rootEl.querySelector("#fmFavoriteStat").addEventListener("click", () => { formulaFilters.favoritesOnly=!formulaFilters.favoritesOnly; renderFormulas(document.getElementById("content")); });
+  rootEl.querySelector("#fSort").addEventListener("change", e => { formulaFilters.sort=e.target.value; renderFormulaList(); });
+  rootEl.querySelector("#fAdd").addEventListener("click", () => openFormulaModal());
+  rootEl.querySelector("#fmCustomize").addEventListener("click", () => openLibraryCustomize("formula"));
+  rootEl.querySelectorAll("[data-subject-filter]").forEach(btn=>btn.addEventListener("click",()=>{
+    applyFormulaSubjectFilter(btn.dataset.subjectFilter);
+  }));
+  renderFormulaList();
+}
+function renderFormulaList(){
+  const list=document.getElementById("formulaList"); if(!list) return;
+  const {q,subject,chapter,favoritesOnly,sort}=formulaFilters;
+  let items=state.formulas.slice();
+  if(subject) items=items.filter(f=>f.subjectId===subject);
+  if(chapter) items=items.filter(f=>f.chapter===chapter);
+  if(favoritesOnly) items=items.filter(f=>f.favorite);
+  if(q){const n=q.toLowerCase();items=items.filter(f=>[f.title,f.formulaLatex,f.explanation,f.variables,f.example,f.notes,f.chapter,f.topic,subjectName(f.subjectId)].filter(Boolean).some(v=>String(v).toLowerCase().includes(n)));}
+  if(sort==="az") items.sort((a,b)=>(a.title||"").localeCompare(b.title||""));
+  else if(sort==="fav") items.sort((a,b)=>(b.favorite?1:0)-(a.favorite?1:0)||(b.createdAt||"").localeCompare(a.createdAt||""));
+  else items.sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||""));
+  if(items.length===0){list.innerHTML=`<div class="fm-empty"><strong>${state.formulas.length?"No formulas match your filters":"Build your formula library"}</strong><span>${state.formulas.length?"Try another search or clear a filter.":"Add formulas with a title and live-rendered LaTeX preview."}</span></div>`;return;}
+
+  const subjectOrder = state.subjects.map(s=>s.id);
+  const groups = [];
+  const grouped = new Map();
+  items.forEach(f=>{
+    const key = f.subjectId || "__general__";
+    if(!grouped.has(key)) grouped.set(key, []);
+    grouped.get(key).push(f);
+  });
+  subjectOrder.forEach(id=>{ if(grouped.has(id)){ groups.push({id, name:subjectName(id), color:subjectColor(id), items:grouped.get(id)}); grouped.delete(id); } });
+  if(grouped.has("__general__")){ groups.push({id:"__general__", name:"General / No Subject", color:"#94a3b8", items:grouped.get("__general__")}); grouped.delete("__general__"); }
+  grouped.forEach((groupItems,id)=>groups.push({id, name:subjectName(id), color:subjectColor(id), items:groupItems}));
+
+  list.innerHTML=`<div class="fm-list-subject-groups"><div class="smart-count">Showing ${items.length} of ${state.formulas.length}</div>${groups.map(g=>`<section class="fm-subject-section" data-subject-section="${esc(g.id)}"><div class="fm-subject-heading"><div class="fm-subject-heading-left"><span class="fm-subject-dot" style="background:${esc(g.color)}"></span><div><h3>${esc(g.name)}</h3><span>${g.items.length} formula${g.items.length===1?"":"s"}</span></div></div></div><div class="fm-list">${g.items.map(f=>formulaCardHTML(f)).join("")}</div></section>`).join("")}</div>`;
+  list.querySelectorAll(".formula-render").forEach(el=>{if(window.katex){try{katex.render(el.dataset.latex||"",el,{throwOnError:false,displayMode:true});el.dataset.rendered="1";}catch(e){el.textContent=el.dataset.latex||"";}}});
+  list.querySelectorAll("[data-act]").forEach(btn=>btn.addEventListener("click",()=>{
+    const id=btn.dataset.id,act=btn.dataset.act;
+    if(act==="edit") openFormulaModal(id);
+    if(act==="del") deleteFormula(id);
+    if(act==="fav"){const f=getItem("formulas",id);updateItem("formulas",id,{favorite:!f.favorite});render();toast(f.favorite?"Removed from favorites":"Added to favorites","success");}
+    if(act==="copy"){const f=getItem("formulas",id);const text=`${f.title}\n${f.formulaLatex}\n${f.explanation||""}`;if(navigator.clipboard?.writeText) navigator.clipboard.writeText(text).then(()=>toast("Copied","success")).catch(()=>toast("Copy failed","error"));else toast("Copy unavailable","error");}
+    if(act==="view") openFormulaView(id);
+  }));
+}
+function formulaCardHTML(f){
+  const c=subjectColor(f.subjectId); const title=f.title||"Untitled Formula"; const meta=[subjectName(f.subjectId),f.chapter,f.topic].filter(Boolean).map(esc).join(" • ");
+  return `<article class="fm-card" style="--card-accent:${c}"><div class="fm-card-top"><div style="min-width:0"><div class="fm-title-row"><h3>${esc(title)}</h3>${f.favorite?'<span title="Favorite">⭐</span>':''}</div><div class="fm-sub">${meta||"General"}</div></div><button class="fm-icon" data-act="fav" data-id="${f.id}" title="${f.favorite?'Remove from favorites':'Add to favorites'}">${f.favorite?'★':'☆'}</button></div><div class="fm-badges">${f.chapter?`<span class="fm-badge">Chapter: ${esc(f.chapter)}</span>`:""}${f.topic?`<span class="fm-badge">Topic: ${esc(f.topic)}</span>`:""}</div><div class="fm-preview formula-render" data-latex="${esc(f.formulaLatex)}"></div>${f.explanation?`<div class="fm-expl">${esc(f.explanation)}</div>`:`<div class="muted">No explanation added yet.</div>`}<div class="fm-actions"><button class="btn small primary" data-act="view" data-id="${f.id}">View</button><button class="btn small" data-act="edit" data-id="${f.id}">Edit</button><button class="btn small" data-act="copy" data-id="${f.id}">Copy</button><button class="btn small danger" data-act="del" data-id="${f.id}">Delete</button></div></article>`;
+}
+function openFormulaView(id){
+  const f=getItem("formulas",id);if(!f)return;
+  openModal({title:f.title,bodyHTML:`<div class="formula-render" id="viewRender" data-latex="${esc(f.formulaLatex)}"></div>${f.explanation?`<p><strong>Explanation:</strong> ${esc(f.explanation)}</p>`:""}${f.variables?`<p><strong>Variables:</strong> ${esc(f.variables)}</p>`:""}${f.example?`<p><strong>Example:</strong> ${esc(f.example)}</p>`:""}${f.notes?`<p><strong>Notes:</strong> ${esc(f.notes)}</p>`:""}<p class="muted">${esc(subjectName(f.subjectId))}${f.chapter?" • "+esc(f.chapter):""}${f.topic?" • "+esc(f.topic):""}</p>`,footerHTML:`<button class="btn" data-close="1">Close</button><button class="btn primary" id="viewEdit">Edit Formula</button>`,onMount:(b,f2)=>{const el=b.querySelector("#viewRender");if(window.katex){try{katex.render(f.formulaLatex||"",el,{throwOnError:false,displayMode:true});}catch(e){el.textContent=f.formulaLatex||"";}}f2.querySelector("[data-close]").addEventListener("click",closeModal);f2.querySelector("#viewEdit").addEventListener("click",()=>{closeModal();openFormulaModal(id);});}});
+}
+function openFormulaModal(id=null){
+  const editing=id?getItem("formulas",id):null;
+  const defaultSubjectId = formulaFilters.subject && state.subjects.some(s=>s.id===formulaFilters.subject) ? formulaFilters.subject : (state.subjects[0]?.id || "");
+  const f=editing||{subjectId:defaultSubjectId,chapter:"",topic:"",title:"",formulaLatex:"",explanation:"",variables:"",example:"",notes:"",favorite:false};
+  openModal({title:editing?"Edit Formula":"Add Formula",size:"large",bodyHTML:`
+    <div class="form-row"><label>Title</label><input id="foTitle" placeholder="e.g. Kinetic Energy" value="${esc(f.title)}" /></div>
+    <div class="form-row inline"><div><label>Subject</label><select id="foSubject"><option value="">— None —</option>${state.subjects.map(s=>`<option value="${s.id}" ${s.id===f.subjectId?"selected":""}>${esc(s.name)}</option>`).join("")}</select></div><div><label>Chapter</label><input id="foChapter" value="${esc(f.chapter)}" /></div></div>
+    <div class="form-row"><label>Topic</label><input id="foTopic" value="${esc(f.topic)}" /></div>
+    <div class="form-row"><label>LaTeX Formula</label><textarea id="foLatex" placeholder="\\frac{1}{2}mv^2">${esc(f.formulaLatex)}</textarea><div class="muted" style="margin-top:6px">Live preview</div><div class="formula-render" id="foPreview"></div></div>
+    <div class="form-row inline"><div><label>Explanation</label><textarea id="foExpl" placeholder="What this formula means…">${esc(f.explanation)}</textarea></div><div><label>Variables</label><textarea id="foVars" placeholder="m = mass, v = velocity">${esc(f.variables)}</textarea></div></div>
+    <div class="form-row"><label>Example</label><textarea id="foExample" placeholder="A short worked example…">${esc(f.example)}</textarea></div>
+    <div class="form-row"><label>Notes</label><textarea id="foNotes" placeholder="Exam tips, units, common mistakes…">${esc(f.notes)}</textarea></div>
+    <div class="form-row"><label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="foFav" ${f.favorite?"checked":""} style="width:auto" /> Favorite formula</label></div>`,
+    footerHTML:`${editing?'<button class="btn danger" id="foDelete">Delete</button>':""}<button class="btn ghost" data-close="1">Cancel</button><button class="btn primary" id="foSave">Save Formula</button>`,
+    onMount:(b,f2)=>{
+      const preview=b.querySelector("#foPreview"),li=b.querySelector("#foLatex");const rp=()=>{if(!window.katex){preview.textContent=li.value;return;}try{katex.render(li.value,preview,{throwOnError:false,displayMode:true});}catch{preview.textContent=li.value;}};li.addEventListener("input",rp);rp();f2.querySelector("[data-close]").addEventListener("click",closeModal);
+      f2.querySelector("#foSave").addEventListener("click",()=>{const p={title:b.querySelector("#foTitle").value.trim(),subjectId:b.querySelector("#foSubject").value,chapter:b.querySelector("#foChapter").value.trim(),topic:b.querySelector("#foTopic").value.trim(),formulaLatex:b.querySelector("#foLatex").value.trim(),explanation:b.querySelector("#foExpl").value.trim(),variables:b.querySelector("#foVars").value.trim(),example:b.querySelector("#foExample").value.trim(),notes:b.querySelector("#foNotes").value.trim(),favorite:b.querySelector("#foFav").checked};if(!p.title||!p.formulaLatex)return toast("Title and formula required","error");if(editing){updateItem("formulas",id,p);toast("Formula updated","success");}else{p.createdAt=new Date().toISOString();addItem("formulas",p);toast("Formula added","success");}closeModal();if(currentRoute==="formulas")render();else render();});
+      const d=f2.querySelector("#foDelete");if(d)d.addEventListener("click",async()=>{if(await confirmDialog("Delete formula?","Cannot be undone.")){deleteData("formulas",id);closeModal();render();toast("Deleted","success");}});
+    }
+  });
+}
+async function deleteFormula(id){if(await confirmDialog("Delete formula?","Cannot be undone.")){deleteData("formulas",id);render();toast("Deleted","success");}}
+
+/* ============ NOTES ============ */
+let noteFilters = { q:"", subject:"", sort:"updated", pinnedOnly:false, favoriteOnly:false };
+function renderNotes(rootEl){
+  const pinned=state.notes.filter(n=>n.pinned).length; const favorites=state.notes.filter(n=>n.favorite).length; const tagCount=new Set(state.notes.flatMap(n=>n.tags||[]).map(t=>String(t).toLowerCase()).filter(Boolean)).size;
+  rootEl.innerHTML=`
+    <div class="nt-hero"><div class="nt-hero-copy"><div class="nt-kicker">Personal Knowledge Base</div><h2>Notes</h2><p>Capture lessons, shortcuts, mistakes, reminders and revision points in a searchable workspace.</p><div class="lib-hero-actions"><button class="btn small" id="ntCustomize">🎨 Customize</button></div></div><div class="nt-stats"><div class="nt-stat clickable" id="ntAll" title="Show all notes"><b>${state.notes.length}</b><span>Notes</span></div><div class="nt-stat clickable ${noteFilters.pinnedOnly?"active":""}" id="ntPinnedStat" title="Show pinned notes"><b>${pinned}</b><span>📌 Pinned</span></div><div class="nt-stat clickable ${noteFilters.favoriteOnly?"active":""}" id="ntFavoriteStat" title="Show favorite notes"><b>${favorites}</b><span>⭐ Favorites</span></div></div></div>
+    <div class="nt-toolbar"><input type="search" id="nSearch" placeholder="Search notes, chapters, tags…" value="${esc(noteFilters.q)}" /><select id="nSubject">${subjectFilterOptions(noteFilters.subject)}</select><select id="nSort"><option value="updated" ${noteFilters.sort==="updated"?"selected":""}>Recently updated</option><option value="az" ${noteFilters.sort==="az"?"selected":""}>A → Z</option><option value="long" ${noteFilters.sort==="long"?"selected":""}>Longest first</option></select><label class="fm-filter-check"><input type="checkbox" id="nPinned" ${noteFilters.pinnedOnly?"checked":""} /> Pinned</label><button class="btn primary" id="nAdd">+ Add Note</button></div>
+    <div class="library-subject-strip note-strip"><div class="library-subject-strip-head"><strong>${esc(state.settings.stream || "Your Stream")} subjects</strong><span class="muted">Quick filter</span></div>${streamSubjectChips()}</div>
+    <div id="noteList"></div>`;
+  rootEl.querySelector("#nSearch").addEventListener("input",e=>{noteFilters.q=e.target.value;renderNoteList();});rootEl.querySelector("#nSubject").addEventListener("change",e=>{noteFilters.subject=e.target.value;renderNoteList();});rootEl.querySelector("#nSort").addEventListener("change",e=>{noteFilters.sort=e.target.value;renderNoteList();});rootEl.querySelector("#nPinned").addEventListener("change",e=>{noteFilters.pinnedOnly=e.target.checked;if(e.target.checked)noteFilters.favoriteOnly=false;renderNotes(document.getElementById("content"));});rootEl.querySelector("#ntAll").addEventListener("click",()=>{noteFilters.pinnedOnly=false;noteFilters.favoriteOnly=false;renderNotes(document.getElementById("content"));});rootEl.querySelector("#ntPinnedStat").addEventListener("click",()=>{const on=!noteFilters.pinnedOnly;noteFilters.pinnedOnly=on;noteFilters.favoriteOnly=false;renderNotes(document.getElementById("content"));});rootEl.querySelector("#ntFavoriteStat").addEventListener("click",()=>{const on=!noteFilters.favoriteOnly;noteFilters.favoriteOnly=on;noteFilters.pinnedOnly=false;renderNotes(document.getElementById("content"));});rootEl.querySelector("#nAdd").addEventListener("click",()=>openNoteModal());rootEl.querySelector("#ntCustomize").addEventListener("click",()=>openLibraryCustomize("note"));rootEl.querySelectorAll("[data-subject-filter]").forEach(btn=>btn.addEventListener("click",()=>{noteFilters.subject=btn.dataset.subjectFilter; rootEl.querySelector("#nSubject").value=noteFilters.subject; renderNoteList();}));renderNoteList();
+}
+function noteWordCount(text){return (String(text||"").trim().match(/\S+/g)||[]).length;}
+function renderNoteList(){
+  const list=document.getElementById("noteList");if(!list)return;const {q,subject,sort,pinnedOnly,favoriteOnly}=noteFilters;let items=state.notes.slice();if(subject)items=items.filter(n=>n.subjectId===subject);if(pinnedOnly)items=items.filter(n=>n.pinned);if(favoriteOnly)items=items.filter(n=>n.favorite);if(q){const n=q.toLowerCase();items=items.filter(x=>[x.title,x.body,x.chapter,(x.tags||[]).join(" "),subjectName(x.subjectId)].filter(Boolean).some(v=>String(v).toLowerCase().includes(n)));}
+  if(sort==="az")items.sort((a,b)=>(a.title||"").localeCompare(b.title||""));else if(sort==="long")items.sort((a,b)=>noteWordCount(b.body)-noteWordCount(a.body));else items.sort((a,b)=>{if(a.pinned!==b.pinned)return a.pinned?-1:1;return (b.updatedAt||"").localeCompare(a.updatedAt||"");});
+  if(items.length===0){list.innerHTML=`<div class="nt-empty"><strong>${state.notes.length?"No notes match your filters":"Start your revision notebook"}</strong><span>${state.notes.length?"Try a different search or remove a filter.":"Create your first note and keep your revision knowledge in one place."}</span></div>`;return;}
+  list.innerHTML=`<div class="nt-list"><div class="smart-count" style="grid-column:1/-1">Showing ${items.length} of ${state.notes.length}</div>${items.map(n=>noteCardHTML(n)).join("")}</div>`;
+  list.querySelectorAll("[data-act]").forEach(btn=>btn.addEventListener("click",()=>{const id=btn.dataset.id,act=btn.dataset.act;if(act==="edit")openNoteModal(id);if(act==="view")openNoteView(id);if(act==="pin"){const n=getItem("notes",id);updateItem("notes",id,{pinned:!n.pinned});render();toast(n.pinned?"Unpinned":"Pinned","success");}if(act==="fav"){const n=getItem("notes",id);updateItem("notes",id,{favorite:!n.favorite});render();toast(n.favorite?"Removed from favorites":"Added to favorites","success");}if(act==="del")deleteNote(id);}));
+}
+function noteCardHTML(n){const wc=noteWordCount(n.body);const tags=(n.tags||[]).slice(0,5).map(t=>`<span class="nt-chip">#${esc(t)}</span>`).join("");return `<article class="nt-card ${n.pinned?"pinned":""}"><div class="nt-card-top"><div style="min-width:0"><div class="nt-title-row"><h3>${n.pinned?'📌 ':''}${n.favorite?'⭐ ':''}${esc(n.title||"Untitled Note")}</h3></div><div class="nt-sub">${esc(subjectName(n.subjectId))}${n.chapter?" • "+esc(n.chapter):""}</div></div><div style="display:flex;gap:2px"><button class="fm-icon" data-act="fav" data-id="${n.id}" title="${n.favorite?'Remove from favorites':'Add to favorites'}">${n.favorite?'★':'☆'}</button><button class="fm-icon" data-act="pin" data-id="${n.id}" title="${n.pinned?'Unpin note':'Pin note'}">${n.pinned?'📌':'📍'}</button></div></div><div class="nt-body">${esc(n.body||"")}</div><div class="nt-tag-wrap">${tags||'<span class="muted">No tags</span>'}</div><div class="nt-meta-row"><span class="nt-word">${wc} word${wc===1?'':'s'} • ${shortDate(n.updatedAt)}</span></div><div class="nt-actions"><button class="btn small primary" data-act="view" data-id="${n.id}">Read</button><button class="btn small" data-act="edit" data-id="${n.id}">Edit</button><button class="btn small danger" data-act="del" data-id="${n.id}">Delete</button></div></article>`;}
+function openNoteView(id){const n=getItem("notes",id);if(!n)return;const tags=(n.tags||[]).map(t=>`<span class="tag">#${esc(t)}</span>`).join("");openModal({title:n.title,bodyHTML:`<div class="muted" style="margin-bottom:12px">${esc(subjectName(n.subjectId))}${n.chapter?" • "+esc(n.chapter):""} • ${noteWordCount(n.body)} words</div><div class="note-body" style="white-space:pre-wrap;font-size:14px;line-height:1.75">${esc(n.body||"")}</div><div style="margin-top:14px">${tags}</div>`,footerHTML:`<button class="btn" data-close="1">Close</button><button class="btn primary" id="noteEdit">Edit Note</button>`,onMount:(b,f)=>{f.querySelector("[data-close]").addEventListener("click",closeModal);f.querySelector("#noteEdit").addEventListener("click",()=>{closeModal();openNoteModal(id);});}});}
+function openNoteModal(id=null){
+  const editing=id?getItem("notes",id):null;const n=editing||{subjectId:state.subjects[0]?.id||"",chapter:"",title:"",body:"",tags:[],pinned:false,favorite:false};
+  openModal({title:editing?"Edit Note":"Add Note",size:"large",bodyHTML:`<div class="form-row"><label>Title</label><input id="noTitle" placeholder="e.g. Organic Chemistry shortcuts" value="${esc(n.title)}" /></div><div class="form-row inline"><div><label>Subject</label><select id="noSubject"><option value="">— None —</option>${state.subjects.map(s=>`<option value="${s.id}" ${s.id===n.subjectId?"selected":""}>${esc(s.name)}</option>`).join("")}</select></div><div><label>Chapter</label><input id="noChapter" value="${esc(n.chapter)}" /></div></div><div class="form-row"><label>Body</label><textarea id="noBody" style="min-height:220px" placeholder="Write your note here…">${esc(n.body)}</textarea><div class="muted" id="noCount" style="margin-top:5px">0 words</div></div><div class="form-row"><label>Tags</label><input id="noTags" placeholder="formula, mistake, exam-tip" value="${esc((n.tags||[]).join(", "))}" /></div><div class="form-row"><label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="noPin" ${n.pinned?"checked":""} style="width:auto" /> Pin note</label><label style="display:flex;gap:6px;align-items:center;margin-top:8px"><input type="checkbox" id="noFav" ${n.favorite?"checked":""} style="width:auto" /> Favorite note</label></div>`,footerHTML:`${editing?'<button class="btn danger" id="noDelete">Delete</button>':""}<button class="btn ghost" data-close="1">Cancel</button><button class="btn primary" id="noSave">Save Note</button>`,onMount:(b,f)=>{
+    const body=b.querySelector("#noBody"),count=b.querySelector("#noCount");const updateCount=()=>count.textContent=`${noteWordCount(body.value)} words`;body.addEventListener("input",updateCount);updateCount();f.querySelector("[data-close]").addEventListener("click",closeModal);f.querySelector("#noSave").addEventListener("click",()=>{const p={title:b.querySelector("#noTitle").value.trim(),subjectId:b.querySelector("#noSubject").value,chapter:b.querySelector("#noChapter").value.trim(),body:b.querySelector("#noBody").value,tags:b.querySelector("#noTags").value.split(",").map(t=>t.trim()).filter(Boolean),pinned:b.querySelector("#noPin").checked,favorite:b.querySelector("#noFav").checked};if(!p.title)return toast("Title required","error");if(editing){updateItem("notes",id,{...p,updatedAt:new Date().toISOString()});toast("Note updated","success");}else{p.createdAt=new Date().toISOString();p.updatedAt=p.createdAt;addItem("notes",p);toast("Note added","success");}closeModal();render();});const d=f.querySelector("#noDelete");if(d)d.addEventListener("click",async()=>{if(await confirmDialog("Delete note?","Cannot be undone.")){deleteData("notes",id);closeModal();render();toast("Deleted","success");}});
+  }});
+}
+async function deleteNote(id){if(await confirmDialog("Delete note?","Cannot be undone.")){deleteData("notes",id);render();toast("Deleted","success");}}
+
+/* ============ STUDY TRACKER ============ */
+let timerInterval = null;
+let timerStart = null;
+let timerState = { subjectId:"", topic:"" };
+let timerElapsedBeforePause = 0;
+let timerPaused = false;
+
+function sessionMinutes(s){
+  const n = Number(s?.duration);
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
+function sessionDateKey(s){
+  if(s?.date && /^\d{4}-\d{2}-\d{2}$/.test(String(s.date))) return String(s.date);
+  if(s?.startedAt){ const d = new Date(s.startedAt); if(!Number.isNaN(d.getTime())) return isoDate(d); }
+  return "";
+}
+function sessionSortValue(s){
+  if(s?.endedAt){ const d = new Date(s.endedAt); if(!Number.isNaN(d.getTime())) return d.getTime(); }
+  if(s?.startedAt){ const d = new Date(s.startedAt); if(!Number.isNaN(d.getTime())) return d.getTime(); }
+  const d = sessionDateKey(s); return d ? new Date(d+"T00:00:00").getTime() : 0;
+}
+function formatSessionDate(s){
+  const d = sessionDateKey(s); return d ? shortDate(d) : "Unknown date";
+}
+function timerElapsedSeconds(){
+  if(!timerStart) return Math.max(0, timerElapsedBeforePause);
+  return Math.max(0, timerElapsedBeforePause + Math.floor((Date.now() - timerStart) / 1000));
+}
+function persistActiveTimer(){
+  if(!state?.settings) return;
+  state.settings.activeTimer = timerStart ? {
+    subjectId: timerState.subjectId || "",
+    topic: timerState.topic || "",
+    startedAt: timerStart,
+    elapsedBeforePause: timerElapsedBeforePause || 0,
+    paused: !!timerPaused
+  } : null;
+  saveData();
+}
+function restoreActiveTimer(){
+  const t = state?.settings?.activeTimer;
+  if(!t || !t.subjectId || !t.startedAt) return false;
+  const start = Number(t.startedAt);
+  if(!Number.isFinite(start) || start <= 0) return false;
+  timerStart = t.paused ? null : start;
+  timerState = { subjectId:String(t.subjectId), topic:String(t.topic || "") };
+  timerElapsedBeforePause = Number.isFinite(Number(t.elapsedBeforePause)) ? Math.max(0, Number(t.elapsedBeforePause)) : 0;
+  timerPaused = !!t.paused;
+  return true;
+}
+function clearActiveTimerPersistence(){
+  if(state?.settings){ state.settings.activeTimer = null; saveData(); }
+}
+function timerDisplayText(){ return fmtHMS(timerElapsedSeconds()); }
+
+function renderStudy(rootEl){
+  ensureStreamSubjects();
+  if(timerStart === null && !timerPaused) restoreActiveTimer();
+  const now = new Date();
+  const todayStr = isoDate(now);
+  const weekStartStr = isoDate(getWeekStart(now));
+  const monthStartStr = isoDate(new Date(now.getFullYear(), now.getMonth(), 1));
+  const todays = state.studySessions.filter(s => sessionDateKey(s) === todayStr);
+  const todayMin = todays.reduce((a,s) => a + sessionMinutes(s), 0);
+  const weeklyMin = state.studySessions.filter(s => sessionDateKey(s) >= weekStartStr && sessionDateKey(s) <= todayStr).reduce((a,s) => a + sessionMinutes(s), 0);
+  const monthlyMin = state.studySessions.filter(s => sessionDateKey(s) >= monthStartStr && sessionDateKey(s) <= todayStr).reduce((a,s) => a + sessionMinutes(s), 0);
+  const targetMin = Math.max(0, Number(state.settings.dailyTarget) || 0) * 60;
+  const targetPct = targetMin ? Math.min(100, Math.round((todayMin / targetMin) * 100)) : 0;
+  const bySubject = state.subjects.map(s => ({ subject: s, min: state.studySessions.filter(x => x.subjectId === s.id).reduce((a,x) => a + sessionMinutes(x), 0) })).sort((a,b) => b.min - a.min);
+  const topSubjectMin = bySubject[0]?.min || 0;
+  const recent = state.studySessions.slice().sort((a,b) => sessionSortValue(b) - sessionSortValue(a)).slice(0,10);
+  const running = !!timerStart;
+  const paused = !timerStart && timerPaused && !!state?.settings?.activeTimer;
+  rootEl.innerHTML = `
+    <div class="grid cols-3" style="margin-bottom:16px">
+      <div class="stat"><div class="stat-label">Today</div><div class="stat-value">${fmtHours(todayMin)}</div><div class="stat-sub">target ${Number(state.settings.dailyTarget)||0}h • ${targetPct}%</div></div>
+      <div class="stat"><div class="stat-label">This Week</div><div class="stat-value">${fmtHours(weeklyMin)}</div></div>
+      <div class="stat"><div class="stat-label">This Month</div><div class="stat-value">${fmtHours(monthlyMin)}</div></div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="section-title"><h2>⏱️ Timer</h2><span class="muted" id="timerStatus">${running ? "Running" : paused ? "Paused" : "Ready"}</span></div>
+      <div style="display:flex;justify-content:center;align-items:center;margin:4px 0 18px"><div id="timerDisplay" style="font-size:42px;font-weight:800;letter-spacing:1px;font-variant-numeric:tabular-nums">${timerDisplayText()}</div></div>
+      <div class="form-row inline"><div><label>Subject</label><select id="tmSubject"><option value="">${state.subjects.length ? "— Select subject —" : "No subjects available"}</option>${state.subjects.map(s => `<option value="${esc(s.id)}">${esc(s.name)}</option>`).join("")}</select></div><div><label>Topic</label><input id="tmTopic" /></div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+        <button class="btn primary" id="tmStart" ${running||paused?"disabled":""}>▶ Start</button>
+        <button class="btn" id="tmPause" ${running?"":"disabled"}>${paused?"▶ Resume":"⏸ Pause"}</button>
+        <button class="btn" id="tmStop" ${running||paused?"":"disabled"}>⏹ Stop &amp; Save</button>
+        <button class="btn" id="tmReset" ${running||paused?"":"disabled"}>↺ Reset</button>
+        <button class="btn" id="tmManual">+ Manual Session</button>
+      </div>
+      ${running||paused ? `<div class="muted" style="margin-top:10px">${paused ? "Timer paused. Resume when you're ready." : "Timer keeps using real elapsed time even when the browser tab is inactive."}</div>` : `<div class="muted" style="margin-top:10px">Start a timer, pause it when needed, and stop to save the session automatically.</div>`}
+    </div>
+    <div class="card" style="margin-bottom:16px"><div class="section-title"><h2>Subject-wise Study Time</h2><span class="muted">${bySubject.filter(x => x.min > 0).length} active</span></div>
+      ${bySubject.length === 0 ? `<div class="empty">No subjects yet.</div>` : bySubject.map(x => `<div class="progress-row"><span class="pr-label">${esc(x.subject.name)}</span><div class="pr-bar progress"><span style="width:${topSubjectMin ? (x.min/topSubjectMin)*100 : 0}%;background:${esc(x.subject.color||"#94a3b8")}"></span></div><span class="pr-val">${fmtHours(x.min)}</span></div>`).join("")}</div>
+    <div class="card"><div class="section-title"><h2>Recent Sessions</h2><span class="muted">${state.studySessions.length} total</span></div>
+      ${recent.length === 0 ? `<div class="empty">No study sessions yet.</div>` : recent.map(s => `<div style="display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)"><span style="width:8px;height:8px;border-radius:50%;background:${subjectColor(s.subjectId)};flex-shrink:0"></span><div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:600">${esc(subjectName(s.subjectId))}${s.topic?" • "+esc(s.topic):""}</div><div class="muted">${formatSessionDate(s)} • ${fmtHours(sessionMinutes(s))}${s.notes?" • "+esc(s.notes):""}</div></div><button class="btn small" data-edit-session="${esc(s.id||"")}" ${s.id?"":"disabled"}>Edit</button><button class="btn small danger" data-del-session="${esc(s.id||"")}" ${s.id?"":"disabled"}>×</button></div>`).join("")}</div>`;
+
+  const subEl = rootEl.querySelector("#tmSubject");
+  const topicEl = rootEl.querySelector("#tmTopic");
+  if(timerState.subjectId && state.subjects.some(s => s.id === timerState.subjectId)) subEl.value = timerState.subjectId;
+  if(timerState.topic) topicEl.value = timerState.topic;
+  subEl.addEventListener("change", () => { timerState.subjectId = subEl.value; persistActiveTimer(); });
+  topicEl.addEventListener("input", () => { timerState.topic = topicEl.value.trim(); });
+  rootEl.querySelector("#tmStart").addEventListener("click", startTimer);
+  rootEl.querySelector("#tmPause").addEventListener("click", toggleTimerPause);
+  rootEl.querySelector("#tmStop").addEventListener("click", stopTimer);
+  rootEl.querySelector("#tmReset").addEventListener("click", resetTimer);
+  rootEl.querySelector("#tmManual").addEventListener("click", () => openSessionModal());
+  rootEl.querySelectorAll("[data-edit-session]").forEach(b => b.addEventListener("click", () => openSessionModal(b.dataset.editSession)));
+  rootEl.querySelectorAll("[data-del-session]").forEach(b => b.addEventListener("click", async () => { const id=b.dataset.delSession; if(!id) return; if(await confirmDialog("Delete session?", "Cannot be undone.")){ deleteData("studySessions", id); render(); toast("Deleted", "success"); } }));
+  if(running || paused) startTimerTicking();
+}
+function startTimer(){
+  if(timerStart || timerPaused) return;
+  const sub = document.getElementById("tmSubject")?.value || "";
+  const topic = document.getElementById("tmTopic")?.value.trim() || "";
+  if(!sub) return toast("Select a subject", "error");
+  timerState = { subjectId: sub, topic };
+  timerStart = Date.now();
+  timerElapsedBeforePause = 0;
+  timerPaused = false;
+  persistActiveTimer();
+  startTimerTicking();
+  render();
+  toast("Timer started", "success");
+}
+function startTimerTicking(){
+  if(timerInterval) clearInterval(timerInterval);
+  updateTimerUI();
+  timerInterval = setInterval(updateTimerUI, 1000);
+}
+function updateTimerUI(){
+  const el = document.getElementById("timerDisplay");
+  if(el) el.textContent = timerDisplayText();
+  const status = document.getElementById("timerStatus");
+  if(status) status.textContent = timerStart ? "Running" : timerPaused ? "Paused" : "Ready";
+}
+function toggleTimerPause(){
+  if(!timerStart && !timerPaused) return;
+  if(timerStart){
+    timerElapsedBeforePause = timerElapsedSeconds();
+    timerStart = null;
+    timerPaused = true;
+    persistActiveTimer();
+    startTimerTicking();
+    render();
+    toast("Timer paused", "success");
+    return;
+  }
+  timerStart = Date.now();
+  timerPaused = false;
+  persistActiveTimer();
+  startTimerTicking();
+  render();
+  toast("Timer resumed", "success");
+}
+async function resetTimer(){
+  if(!timerStart && !timerPaused) return;
+  if(!(await confirmDialog("Reset timer?", "The current unsaved timer will be discarded."))) return;
+  stopTimerSilent();
+  render();
+  toast("Timer reset", "success");
+}
+function stopTimer(){
+  if(!timerStart && !timerPaused) return;
+  const secs = timerElapsedSeconds();
+  const minutes = Math.max(1, Math.round(secs / 60));
+  const startedMs = timerStart ? timerStart : (timerPaused ? Date.now() - (timerElapsedBeforePause*1000) : Date.now());
+  const startedDate = new Date(startedMs);
+  const endedDate = new Date();
+  addItem("studySessions", {
+    subjectId: timerState.subjectId,
+    topic: timerState.topic,
+    duration: minutes,
+    date: isoDate(startedDate),
+    notes: "",
+    startedAt: startedDate.toISOString(),
+    endedAt: endedDate.toISOString()
+  });
+  if(timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+  timerStart = null;
+  timerElapsedBeforePause = 0;
+  timerPaused = false;
+  timerState = { subjectId:"", topic:"" };
+  clearActiveTimerPersistence();
+  toast(`Saved ${minutes} min`, "success");
+  render();
+}
+function openSessionModal(id=null){
+  const editing = id ? getItem("studySessions", id) : null;
+  const s = editing || { subjectId:state.subjects[0]?.id||"", topic:"", duration:60, date:isoDate(new Date()), notes:"" };
+  openModal({
+    title: editing ? "Edit Study Session" : "Add Study Session",
+    bodyHTML: `
+      <div class="form-row"><label>Subject</label><select id="seSubject"><option value="">— None —</option>${state.subjects.map(x => `<option value="${x.id}" ${x.id===s.subjectId?"selected":""}>${esc(x.name)}</option>`).join("")}</select></div>
+      <div class="form-row"><label>Topic</label><input id="seTopic" value="${esc(s.topic)}" /></div>
+      <div class="form-row inline"><div><label>Duration (min)</label><input type="number" id="seDuration" min="1" step="1" value="${sessionMinutes(s)||60}" /></div><div><label>Date</label><input type="date" id="seDate" value="${esc(sessionDateKey(s)||isoDate(new Date()))}" /></div></div>
+      <div class="form-row"><label>Notes</label><textarea id="seNotes">${esc(s.notes||"")}</textarea></div>`,
+    footerHTML: `${editing?'<button class="btn danger" id="seDelete">Delete</button>':""}<button class="btn ghost" data-close="1">Cancel</button><button class="btn primary" id="seSave">${editing?"Update":"Save"}</button>`,
+    onMount:(b,f)=>{
+      f.querySelector("[data-close]").addEventListener("click",closeModal);
+      f.querySelector("#seSave").addEventListener("click",()=>{
+        const duration = Number(b.querySelector("#seDuration").value);
+        const date = b.querySelector("#seDate").value;
+        const p = { subjectId:b.querySelector("#seSubject").value, topic:b.querySelector("#seTopic").value.trim(), duration:Number.isFinite(duration)?Math.floor(duration):0, date, notes:b.querySelector("#seNotes").value.trim() };
+        if(!p.subjectId) return toast("Subject required", "error");
+        if(!p.duration || p.duration < 1) return toast("Duration must be at least 1 minute", "error");
+        if(!/^\d{4}-\d{2}-\d{2}$/.test(p.date)) return toast("Choose a valid date", "error");
+        if(editing){ updateItem("studySessions", id, {...p, updatedAt:new Date().toISOString()}); toast("Session updated", "success"); }
+        else { p.startedAt = new Date(p.date+"T12:00:00").toISOString(); p.endedAt = p.startedAt; addItem("studySessions", p); toast("Added", "success"); }
+        closeModal(); render();
+      });
+      const d=f.querySelector("#seDelete");
+      if(d) d.addEventListener("click",async()=>{ if(await confirmDialog("Delete session?","Cannot be undone.")){ deleteData("studySessions",id); closeModal(); render(); toast("Deleted","success"); } });
+    }
+  });
+}
+
+/* ============ SETTINGS ============ */
+
+function renderSettings(rootEl){
+  const s = state.settings;
+  rootEl.innerHTML = `
+    <div class="grid cols-2">
+      <div class="card" style="grid-column:1/-1">
+        <div class="section-title"><h2>👤 Student Profile</h2></div>
+        <div class="responsive-stack">
+          <div>
+            <div class="photo-circle" id="profilePhoto">👤</div>
+            <div class="photo-actions">
+              <button class="btn small primary" id="photoUpload">📷 Upload Photo</button>
+              <button class="btn small" id="photoRemove" ${state.settings.photoId?"":"disabled"}>Remove</button>
+            </div>
+            <input type="file" id="photoInput" accept="image/*" style="display:none" />
+          </div>
+          <div class="responsive-grow">
+            <div class="form-row"><label>Name</label><input id="stName" value="${esc(s.studentName)}" /></div>
+            <div class="form-row inline"><div><label>A/L Stream</label><select id="stStream">${["","Physical Science","Biological Science","Commerce","Arts","Technology","Other"].map(x => `<option ${x===s.stream?"selected":""}>${x}</option>`).join("")}</select></div><div><label>Exam Year</label><input id="stYear" value="${esc(s.examYear)}" placeholder="2026" /></div></div>
+            <div class="form-row inline"><div><label>Daily Target (hours)</label><input type="number" id="stTarget" value="${s.dailyTarget}" min="0" /></div><div></div></div>
+            <div class="form-actions"><button class="btn primary" id="stSave">Save Profile</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="card"><div class="section-title"><h2>Appearance</h2></div>
+        <div class="form-row"><label>Theme</label><select id="stTheme">${["light","dark","system"].map(t => `<option value="${t}" ${t===s.theme?"selected":""}>${t}</option>`).join("")}</select></div>
+        <div class="form-row"><label>Accent Color</label><input type="color" id="stAccent" value="${s.accent}" style="height:38px;padding:2px" /></div>
+        <div class="form-row"><button class="btn" id="stLibraryCustomize">🎨 Customize Formula Book &amp; Notes</button></div>
+      </div>
+      <div class="card"><div class="section-title"><h2>Timetable Settings</h2></div>
+        <div class="form-row inline"><div><label>Start</label><input type="time" id="ttStart" value="${s.timetable.start}" /></div><div><label>End</label><input type="time" id="ttEnd" value="${s.timetable.end}" /></div></div>
+        <div class="form-row inline"><div><label>Interval</label><select id="ttInterval"><option value="30" ${s.timetable.interval===30?"selected":""}>30 min</option><option value="60" ${s.timetable.interval===60?"selected":""}>60 min</option></select></div><div><label>Week Starts</label><select id="ttWeekStart"><option value="Mon" ${s.timetable.weekStart==="Mon"?"selected":""}>Monday</option><option value="Sun" ${s.timetable.weekStart==="Sun"?"selected":""}>Sunday</option></select></div></div>
+        <div class="form-actions"><button class="btn primary" id="ttSave">Save Timetable</button></div>
+      </div>
+      <div class="card" style="grid-column:1/-1"><div class="section-title"><h2>Subjects</h2><button class="btn primary small" id="subAdd">+ Add Subject</button></div><div id="subjectList">
+        ${state.subjects.length === 0 ? `<div class="empty">No subjects yet.</div>` : state.subjects.map(sub => `<div style="display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)"><span style="width:12px;height:12px;border-radius:50%;background:${sub.color}"></span><span style="flex:1;font-size:13.5px">${esc(sub.icon||"")} ${esc(sub.name)}</span><button class="btn small" data-edit-sub="${sub.id}">Edit</button><button class="btn small danger" data-del-sub="${sub.id}">×</button></div>`).join("")}
+      </div></div>
+      <div class="card" style="grid-column:1/-1"><div class="section-title"><h2>Account</h2></div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+          <button class="btn" id="acSwitch">👥 Switch Profile</button>
+          <button class="btn" id="acNew">+ Add Another Profile</button>
+          <button class="btn" id="acLogout">↪ Log Out</button>
+          <button class="btn danger" id="acDelete">🗑 Delete This Profile</button>
+        </div>
+        <div class="muted">Your data lives only in this browser, under your own profile. Other profiles on this device can't see your timetable, formulas, notes, or study sessions.</div>
+      </div>
+      <div class="card" style="grid-column:1/-1"><div class="section-title"><h2>Backup &amp; Restore (this profile)</h2></div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn primary" id="bkExport">⬇ Export JSON</button><button class="btn" id="bkImport">⬆ Import JSON</button><button class="btn" id="bkReset">Reset This Profile</button></div>
+        <input type="file" id="bkFile" accept="application/json" style="display:none" />
+        <div class="muted" style="margin-top:8px">Export/import only affects the profile you're currently signed in as.</div>
+      </div>
+    </div>`;
+
+  const profileEl = rootEl.querySelector("#profilePhoto");
+  const photoInput = rootEl.querySelector("#photoInput");
+  getPhotoData(state.settings).then(data => {
+    if(data && profileEl){ profileEl.innerHTML = `<img src="${data}" alt="Profile photo"/>`; }
+  }).catch(()=>{});
+  rootEl.querySelector("#photoUpload").addEventListener("click", () => photoInput.click());
+  photoInput.addEventListener("change", async e => {
+    const file = e.target.files[0]; if(!file) return;
+    if(!file.type.startsWith("image/")) { e.target.value=""; return toast("Image file required", "error"); }
+    if(file.size > 10*1024*1024) { e.target.value=""; return toast("Image too large (>10MB)", "error"); }
+    const oldId = state.settings.photoId;
+    try {
+      const previewData = await cropPhotoFile(file);
+      if(!previewData) return;
+      const id = uid("photo");
+      let storedInDb = false;
+      try {
+        const data = await readFileAsArrayBuffer(file);
+        await fileDB.put({ id, name: file.name, type: file.type, size: file.size, data });
+        storedInDb = true;
+      } catch(e) { /* Use the compact preview when IndexedDB is unavailable. */ }
+      updateData(s => { s.settings.photoId = storedInDb ? id : ""; s.settings.photoData = previewData; });
+      syncProfileMeta();
+      if(oldId && oldId !== id){ try { await fileDB.delete(oldId); } catch(e){} }
+      profileEl.innerHTML = `<img src="${previewData}" alt="Profile photo"/>`;
+      await refreshBrand();
+      renderSettings(rootEl); toast("Photo updated", "success");
+    } catch(err){
+      toast("Could not save that photo. Try another image.", "error");
+    } finally { e.target.value=""; }
+  });
+  rootEl.querySelector("#photoRemove").addEventListener("click", async () => {
+    const oldId = state.settings.photoId; if(!oldId && !state.settings.photoData) return;
+    updateData(s => { s.settings.photoId = ""; s.settings.photoData = ""; });
+    if(oldId){ try { await fileDB.delete(oldId); } catch(e){} }
+    await refreshBrand();
+    renderSettings(rootEl); toast("Photo removed", "success");
+  });
+  rootEl.querySelector("#stSave").addEventListener("click", async () => {
+    updateData(s => {
+      s.settings.studentName = rootEl.querySelector("#stName").value.trim();
+      s.settings.stream = rootEl.querySelector("#stStream").value;
+      s.settings.examYear = rootEl.querySelector("#stYear").value.trim();
+      s.settings.dailyTarget = parseFloat(rootEl.querySelector("#stTarget").value) || 0;
+    });
+    ensureStreamSubjects();
+    syncProfileMeta();
+    await refreshBrand();
+    toast("Saved", "success");
+  });
+  rootEl.querySelector("#stTheme").addEventListener("change", e => { updateData(s => s.settings.theme = e.target.value); applyTheme(); toast("Theme updated", "success"); });
+  rootEl.querySelector("#stAccent").addEventListener("input", e => { updateData(s => s.settings.accent = e.target.value); applyAccent(); });
+  rootEl.querySelector("#stLibraryCustomize").addEventListener("click", () => openLibraryCustomize("formula"));
+  rootEl.querySelector("#ttSave").addEventListener("click", () => {
+    updateData(s => {
+      s.settings.timetable.start = rootEl.querySelector("#ttStart").value;
+      s.settings.timetable.end = rootEl.querySelector("#ttEnd").value;
+      s.settings.timetable.interval = parseInt(rootEl.querySelector("#ttInterval").value, 10);
+      s.settings.timetable.weekStart = rootEl.querySelector("#ttWeekStart").value;
+    });
+    toast("Saved", "success");
+  });
+  rootEl.querySelector("#subAdd").addEventListener("click", () => openSubjectModal());
+  rootEl.querySelectorAll("[data-edit-sub]").forEach(b => b.addEventListener("click", () => openSubjectModal(b.dataset.editSub)));
+  rootEl.querySelectorAll("[data-del-sub]").forEach(b => b.addEventListener("click", async () => { if(await confirmDialog("Delete subject?", "Related records will show as '—'. Cannot be undone.")){
+    const sub = subjectById(b.dataset.delSub);
+    const normalizedName = normalizeSubjectName(sub?.name);
+    updateData(s => {
+      s.subjects = s.subjects.filter(x => x.id !== b.dataset.delSub);
+      const stream = String(s.settings.stream || "").trim();
+      const isStarter = !!(STREAM_SUBJECT_PRESETS[stream] || []).some(([name]) => normalizeSubjectName(name) === normalizedName);
+      if(isStarter){
+        s.settings.deletedStarterSubjects = Array.isArray(s.settings.deletedStarterSubjects) ? s.settings.deletedStarterSubjects : [];
+        if(normalizedName && !s.settings.deletedStarterSubjects.includes(normalizedName)) s.settings.deletedStarterSubjects.push(normalizedName);
+      }
+    });
+    renderSettings(rootEl); toast("Deleted", "success");
+  } }));
+  rootEl.querySelector("#acSwitch").addEventListener("click", () => switchProfile());
+  rootEl.querySelector("#acLogout").addEventListener("click", () => logoutProfile());
+  rootEl.querySelector("#acNew").addEventListener("click", () => { saveData(); syncProfileMeta(); root.current = null; saveRoot(); activeAuth = false; stopTimerSilent(); profileId = null; location.hash = ""; renderGate("welcome"); });
+  rootEl.querySelector("#acDelete").addEventListener("click", deleteProfile);
+  rootEl.querySelector("#bkExport").addEventListener("click", exportData);
+  rootEl.querySelector("#bkImport").addEventListener("click", () => rootEl.querySelector("#bkFile").click());
+  rootEl.querySelector("#bkFile").addEventListener("change", e => {
+    const file = e.target.files[0]; if(!file) return;
+    const r = new FileReader();
+    r.onload = () => { importData(r.result).then(() => refreshBrand()); };
+    r.readAsText(file);
+    e.target.value = "";
+  });
+  rootEl.querySelector("#bkReset").addEventListener("click", async () => {
+    if(await confirmDialog("Reset this profile?", "All data for this profile will be erased. Cannot be undone.")){
+      state = cloneDefaultState();
+      state.settings.studentName = getActiveProfileMeta()?.name || "";
+      state.settings.stream = getActiveProfileMeta()?.stream || "";
+      saveData(); applyTheme(); applyAccent(); renderSettings(rootEl); toast("Reset complete", "success");
+    }
+  });
+}
+function openSubjectModal(id = null){
+  const editing = id ? subjectById(id) : null;
+  const s = editing || { name: "", color: randomColor(), icon: "📘" };
+  openModal({
+    title: editing ? "Edit Subject" : "Add Subject",
+    bodyHTML: `<div class="form-row"><label>Name</label><input id="subName" value="${esc(s.name)}" /></div><div class="form-row"><label>Icon (emoji)</label><input id="subIcon" value="${esc(s.icon)}" maxlength="4" /></div><div class="form-row"><label>Color</label><input type="color" id="subColor" value="${s.color}" style="height:40px;padding:2px" /></div>`,
+    footerHTML: `<button class="btn ghost" data-close="1">Cancel</button><button class="btn primary" id="subSave">Save</button>`,
+    onMount: (b, f) => {
+      f.querySelector("[data-close]").addEventListener("click", closeModal);
+      f.querySelector("#subSave").addEventListener("click", () => {
+        const p = { name: b.querySelector("#subName").value.trim(), icon: b.querySelector("#subIcon").value.trim(), color: b.querySelector("#subColor").value };
+        if(!p.name) return toast("Name required", "error");
+        const normalizedName = normalizeSubjectName(p.name);
+        if(editing) updateItem("subjects", id, p); else {
+          updateData(st => {
+            st.settings.deletedStarterSubjects = (st.settings.deletedStarterSubjects || []).filter(n => n !== normalizedName);
+            st.subjects.push({...p, id:uid("sub")});
+          });
+        }
+        closeModal(); renderSettings(document.getElementById("content"));
+        toast(editing ? "Updated" : "Added", "success");
+      });
+    }
+  });
+}
+function randomColor(){ const c = ["#3b6ef6","#10b981","#f59e0b","#ef4444","#8b5cf6","#06b6d4","#ec4899","#84cc16","#f97316","#14b8a6"]; return c[Math.floor(Math.random()*c.length)]; }
+
+/* ============ BACKUP (per profile) ============ */
+function exportData(){
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type:"application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const safeName = (state.settings.studentName || "profile").replace(/[^a-z0-9_-]/gi, "_");
+  a.href = url;
+  a.download = `al-study-planner-${safeName}-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast("Exported", "success");
+}
+function importData(text){
+  try {
+    const parsed = JSON.parse(text);
+    if(!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("Not an object");
+    const req = ["settings","subjects","timetableEvents","formulas","notes","studySessions"];
+    for(const k of req){ if(!(k in parsed)) throw new Error("Missing key: " + k); if(k !== "settings" && !Array.isArray(parsed[k])) throw new Error("Invalid: " + k); }
+    state = deepMerge(cloneDefaultState(), parsed);
+    saveData(); applyTheme(); applyAccent(); syncProfileMeta(); render();
+    toast("Imported", "success");
+    return true;
+  } catch(e){
+    console.error("importData:", e);
+    toast("Invalid JSON: " + e.message, "error");
+    return false;
+  }
+}
+
+/* ============ PROFILE SWITCHING ============ */
+async function switchProfile(){
+  syncProfileMeta();
+  if(window.ALStudyPlannerCloud?.enabled && activeAuth){
+    saveData();
+    await flushCloudSave();
+    try { await window.ALStudyPlannerCloud.logout(); } catch(e){ console.error("Cloud logout failed:", e); }
+  } else {
+    saveData();
+  }
+  stopTimerSilent();
+  root.current = null;
+  saveRoot();
+  activeAuth = false;
+  profileId = null;
+  cloudProfile = null;
+  state = null;
+  currentRoute = "dashboard";
+  location.hash = "";
+  closeModal();
+  closeSidebarOnMobile();
+  renderGate("login");
+}
+async function logoutProfile(){
+  syncProfileMeta();
+  if(window.ALStudyPlannerCloud?.enabled && activeAuth){
+    saveData();
+    await flushCloudSave();
+    try { await window.ALStudyPlannerCloud.logout(); } catch(e){ console.error("Cloud logout failed:", e); }
+  } else {
+    saveData();
+  }
+  stopTimerSilent();
+  root.current = null;
+  saveRoot();
+  activeAuth = false;
+  profileId = null;
+  cloudProfile = null;
+  state = null;
+  currentRoute = "dashboard";
+  closeModal();
+  closeSidebarOnMobile();
+  location.hash = "";
+  renderGate("login");
+}
+async function deleteProfile(){
+  const p = getActiveProfileMeta();
+  if(!p) return;
+  if(!await confirmDialog("Delete profile \"" + (p.name || "Account") + "\"?", "This profile's data will be permanently removed. Cannot be undone.")) return;
+  if(window.ALStudyPlannerCloud?.enabled && activeAuth){
+    try {
+      await flushCloudSave();
+      await window.ALStudyPlannerCloud.deleteAccount(window.ALStudyPlannerCloud.user?.uid || profileId);
+    } catch(e){
+      console.error("Cloud delete failed:", e);
+      return toast("Account could not be deleted. Please sign in again and retry.", "error");
+    }
+    storageRemove(profileDataKey(profileId));
+    root.profiles = root.profiles.filter(x => x.id !== profileId);
+    root.current = null;
+    saveRoot();
+    activeAuth = false;
+    profileId = null;
+    cloudProfile = null;
+    state = null;
+    stopTimerSilent();
+    location.hash = "";
+    renderGate("welcome");
+    return;
+  }
+  if(state?.settings?.photoId){ try { await fileDB.delete(state.settings.photoId); } catch(e){} }
+  storageRemove(profileDataKey(profileId));
+  root.profiles = root.profiles.filter(x => x.id !== profileId);
+  root.current = null;
+  saveRoot();
+  profileId = null;
+  stopTimerSilent();
+  location.hash = "";
+  renderGate(root.profiles.length ? "picker" : "welcome");
+}
+
+/* ============ GATE (login / create account) ============ */
+function renderGate(mode){
+  const gate = document.getElementById("gateRoot");
+  const app = document.getElementById("app");
+  app.style.display = "none";
+  gate.style.display = "block";
+
+  const shell = (inner) => `
+    <div class="gate-wrap">
+      <div class="gate-shell">
+        <section class="gate-hero">
+          <div>
+            <div class="gate-brand"><div class="gate-brand-mark">A/L</div><div class="gate-brand-text"><strong>A/L Study Planner</strong><span>Plan smarter. Study better.</span></div></div>
+            <h2>Your study life, organised in one place.</h2>
+            <p>Keep your timetable, formulas, notes and study progress together with a clean workspace made for A/L students.</p>
+            <div class="gate-features">
+              <div class="gate-feature"><i>✓</i><span>Private account access</span></div>
+              <div class="gate-feature"><i>✓</i><span>Timetable, notes &amp; formula book</span></div>
+              <div class="gate-feature"><i>✓</i><span>Works across mobile, tablet and PC</span></div>
+            </div>
+          </div>
+          <div class="muted">Only the account you sign in to is opened.</div>
+        </section>
+        <section class="gate-panel">${inner}</section>
+      </div>
+    </div>`;
+
+  if(mode === "welcome"){
+    gate.innerHTML = shell(`
+      <div class="gate-card">
+        <div class="gate-logo">A/L</div>
+        <h1 class="gate-h1">Create your account</h1>
+        <p class="gate-sub">Choose a unique username and password. Other accounts on this device won't be shown on the login screen.</p>
+        <div class="form-row" style="text-align:left">
+          <label>Username</label>
+          <input id="gateUsername" placeholder="e.g. kasun123" autocomplete="username" autocapitalize="none" spellcheck="false" autofocus />
+        </div>
+        <div class="form-row" style="text-align:left">
+          <label>Your name</label>
+          <input id="gateName" placeholder="e.g. Kasun" autocomplete="name" />
+        </div>
+        <div class="form-row" style="text-align:left">
+          <label>A/L Stream <span style="color:var(--danger)">*</span></label>
+          <select id="gateStream" required autocomplete="off">
+            <option value="" selected disabled>Select your stream</option>
+            ${["Physical Science","Biological Science","Commerce","Arts","Technology","Other"].map(x => `<option>${x}</option>`).join("")}
+          </select>
+        </div>
+        <div class="form-row" style="text-align:left">
+          <label>Password</label>
+          <input id="gatePassword" type="password" placeholder="At least 6 characters" autocomplete="new-password" />
+        </div>
+        <div class="form-row" style="text-align:left">
+          <label>Confirm password</label>
+          <input id="gatePassword2" type="password" placeholder="Re-enter your password" autocomplete="new-password" />
+        </div>
+        <button class="btn primary" id="gateCreate" style="width:100%;margin-top:4px">Create Account <span style="font-size:16px">→</span></button>
+        ${root.profiles.length ? `<button class="btn ghost" id="gateBack" style="width:100%;margin-top:8px">← Back to login</button>` : ""}
+        <div class="gate-note muted">Cloud sync is used when Firebase is configured; otherwise this browser keeps a local copy.</div>
+      </div>`);
+
+    const usernameInput = document.getElementById("gateUsername");
+    const nameInput = document.getElementById("gateName");
+    const streamEl = document.getElementById("gateStream");
+    const passwordInput = document.getElementById("gatePassword");
+    const password2Input = document.getElementById("gatePassword2");
+
+    [usernameInput,nameInput,passwordInput,password2Input].forEach(inp => inp.addEventListener("keydown", e => {
+      if(e.key === "Enter") document.getElementById("gateCreate").click();
+    }));
+
+    document.getElementById("gateCreate").addEventListener("click", async () => {
+      const username = normalizeUsername(usernameInput.value);
+      const name = nameInput.value.trim();
+      const stream = streamEl.value.trim();
+      const password = passwordInput.value;
+      const password2 = password2Input.value;
+      if(!username || username.length < 3) return toast("Use a username with at least 3 letters/numbers.", "error");
+      if(isUsernameTaken(username)) return toast("That username is already used. Choose another one.", "error");
+      if(!name) return toast("Enter your name", "error");
+      if(!stream){ streamEl.focus(); return toast("Select your A/L stream", "error"); }
+      if(password.length < 6) return toast("Password must be at least 6 characters.", "error");
+      if(password !== password2) return toast("Passwords do not match.", "error");
+      await createProfile(username, name, stream, password);
+    });
+
+    const backBtn = document.getElementById("gateBack");
+    if(backBtn) backBtn.addEventListener("click", () => renderGate("login"));
+  } else if(mode === "secureLegacy"){
+    gate.innerHTML = shell(`
+      <div class="gate-card">
+        <div class="gate-logo">A/L</div>
+        <h1 class="gate-h1">Secure existing account</h1>
+        <p class="gate-sub">This account was created before password login was added. Set a password once to protect it.</p>
+        <div class="form-row" style="text-align:left">
+          <label>Existing name</label>
+          <input id="legacyName" placeholder="The name used in your old profile" autocomplete="name" autofocus />
+        </div>
+        <div class="form-row" style="text-align:left">
+          <label>New password</label>
+          <input id="legacyPassword" type="password" placeholder="At least 6 characters" autocomplete="new-password" />
+        </div>
+        <div class="form-row" style="text-align:left">
+          <label>Confirm password</label>
+          <input id="legacyPassword2" type="password" placeholder="Re-enter your password" autocomplete="new-password" />
+        </div>
+        <button class="btn primary" id="legacySecure" style="width:100%;margin-top:4px">Set Password &amp; Sign In <span style="font-size:16px">→</span></button>
+        <button class="btn ghost" id="legacyBack" style="width:100%;margin-top:8px">← Back to login</button>
+        <div class="gate-note muted">No account list is displayed. After this one-time setup, the account will require the password every time.</div>
+      </div>`);
+
+    const nameInput = document.getElementById("legacyName");
+    const passwordInput = document.getElementById("legacyPassword");
+    const password2Input = document.getElementById("legacyPassword2");
+    [nameInput,passwordInput,password2Input].forEach(inp => inp.addEventListener("keydown", e => {
+      if(e.key === "Enter") document.getElementById("legacySecure").click();
+    }));
+    document.getElementById("legacySecure").addEventListener("click", () => secureLegacyProfile(nameInput.value, passwordInput.value, password2Input.value));
+    document.getElementById("legacyBack").addEventListener("click", () => renderGate("login"));
+  } else {
+    gate.innerHTML = shell(`
+      <div class="gate-card">
+        <div class="gate-logo">A/L</div>
+        <h1 class="gate-h1">Sign in</h1>
+        <p class="gate-sub">Enter your own username and password. No profile list is shown.</p>
+        <div class="form-row" style="text-align:left">
+          <label>Username</label>
+          <input id="gateLoginUsername" placeholder="Your username" autocomplete="username" autocapitalize="none" spellcheck="false" autofocus />
+        </div>
+        <div class="form-row" style="text-align:left">
+          <label>Password</label>
+          <input id="gateLoginPassword" type="password" placeholder="Your password" autocomplete="current-password" />
+        </div>
+        <button class="btn primary" id="gateLogin" style="width:100%;margin-top:4px">Sign In <span style="font-size:16px">→</span></button>
+        <button class="btn ghost" id="gateNew" style="width:100%;margin-top:8px">+ Create New Account</button>
+        ${root.profiles.some(p => !p.passHash && !p.username) ? `<button class="btn ghost" id="gateLegacy" style="width:100%;margin-top:4px">🔐 Secure Existing Account</button>` : ""}
+        <div class="gate-note muted">For privacy, the app no longer displays other account names/photos on the login screen. You must sign in each time the page is opened.</div>
+      </div>`);
+
+    const userInput = document.getElementById("gateLoginUsername");
+    const passInput = document.getElementById("gateLoginPassword");
+
+    [userInput,passInput].forEach(inp => inp.addEventListener("keydown", e => {
+      if(e.key === "Enter") document.getElementById("gateLogin").click();
+    }));
+
+    document.getElementById("gateLogin").addEventListener("click", () => loginProfile(userInput.value, passInput.value));
+    document.getElementById("gateNew").addEventListener("click", () => renderGate("welcome"));
+    const legacyBtn = document.getElementById("gateLegacy");
+    if(legacyBtn) legacyBtn.addEventListener("click", () => renderGate("secureLegacy"));
+  }
+}
+
+async function verifyLocalCredentials(username, password){
+  const p = profileByUsername(username);
+  if(!p || !p.passHash || !p.passSalt) return null;
+  const candidate = await hashPassword(password, p.passSalt);
+  return candidate === p.passHash ? p : null;
+}
+
+async function createProfile(username, name, stream, password){
+  const cleanUsername = normalizeUsername(username);
+  const cleanName = String(name || "").trim();
+  const cleanStream = String(stream || "").trim();
+  if(!cleanUsername || !cleanName || !cleanStream || !password) return;
+
+  const id = uid("p");
+  const passSalt = randomHex(16);
+  const passHash = await hashPassword(password, passSalt);
+  const profile = {
+    id,
+    username: cleanUsername,
+    name: cleanName,
+    stream: cleanStream,
+    examYear: "",
+    photoData: "",
+    passHash,
+    passSalt,
+    createdAt: new Date().toISOString()
+  };
+  const fresh = cloneDefaultState();
+  fresh.settings.studentName = cleanName;
+  fresh.settings.stream = cleanStream;
+
+  if(window.ALStudyPlannerCloud?.enabled){
+    try {
+      const user = await window.ALStudyPlannerCloud.createAccount(cleanUsername, password, profile, fresh);
+      profile.id = user.uid;
+      delete profile.passHash;
+      delete profile.passSalt;
+      root.profiles = root.profiles.filter(p => p.username !== cleanUsername);
+      root.profiles.push(profile);
+      root.current = null;
+      saveRoot();
+      storageSet(profileDataKey(user.uid), JSON.stringify(fresh));
+      cloudProfile = profile;
+      activeAuth = true;
+      profileId = user.uid;
+      cloudSyncWarningShown = false;
+      await startApp(user.uid, true);
+      return;
+    } catch(e){
+      console.error("Cloud account creation failed:", e);
+      const msg = e?.code === "auth/email-already-in-use" ? "That username is already used. Choose another one." : "Cloud account creation failed. Check your internet connection and Firebase setup.";
+      return toast(msg, "error");
+    }
+  }
+
+  root.profiles.push(profile);
+  root.current = null;
+  const rootOk = storageSet(ROOT_KEY, JSON.stringify(root));
+  const dataOk = storageSet(profileDataKey(id), JSON.stringify(fresh));
+  if(!rootOk || !dataOk) showStorageWarning();
+  activeAuth = true;
+  profileId = id;
+  await startApp(id, true);
+}
+
+async function secureLegacyProfile(name, password, password2){
+  const cleanName = String(name || "").trim();
+  if(!cleanName) return toast("Enter your existing profile name.", "error");
+  if(password.length < 6) return toast("Password must be at least 6 characters.", "error");
+  if(password !== password2) return toast("Passwords do not match.", "error");
+
+  const cleanUsername = normalizeUsername(cleanName);
+  const matches = root.profiles.filter(p => (!p.passHash || !p.passSalt) && !p.username && normalizeUsername(p.name) === cleanUsername);
+  if(matches.length !== 1) return toast("Existing profile not found.", "error");
+  const p = matches[0];
+  const localStateRaw = storageGet(profileDataKey(p.id));
+  let localState = null;
+  try { localState = localStateRaw ? normalizeState(JSON.parse(localStateRaw)) : cloneDefaultState(); } catch(e){ localState = cloneDefaultState(); }
+
+  if(window.ALStudyPlannerCloud?.enabled){
+    try {
+      const oldLocalId = p.id;
+      const user = await window.ALStudyPlannerCloud.createAccount(cleanUsername, password, p, localState);
+      storageRemove(profileDataKey(oldLocalId));
+      p.id = user.uid;
+      p.username = cleanUsername;
+      p.passHash = "";
+      p.passSalt = "";
+      saveRoot();
+      storageRemove(profileDataKey(p.id));
+      storageSet(profileDataKey(user.uid), JSON.stringify(localState));
+      cloudProfile = { ...p, id:user.uid, username:cleanUsername };
+      activeAuth = true;
+      profileId = user.uid;
+      await startApp(user.uid, true);
+      return;
+    } catch(e){
+      console.error("Legacy cloud migration failed:", e);
+      return toast(e?.code === "auth/email-already-in-use" ? "This username is already registered in the cloud." : "Could not secure this account online.", "error");
+    }
+  }
+
+  const passSalt = randomHex(16);
+  p.username = cleanUsername;
+  p.passSalt = passSalt;
+  p.passHash = await hashPassword(password, passSalt);
+  root.current = null;
+  saveRoot();
+  activeAuth = true;
+  profileId = p.id;
+  await startApp(p.id, true);
+}
+
+async function loginProfile(username, password){
+  const cleanUsername = normalizeUsername(username);
+  if(!cleanUsername) return toast("Enter your username.", "error");
+  if(!password) return toast("Enter your password.", "error");
+
+  if(window.ALStudyPlannerCloud?.enabled){
+    try {
+      const user = await window.ALStudyPlannerCloud.signIn(cleanUsername, password);
+      activeAuth = true;
+      profileId = user.uid;
+      cloudSyncWarningShown = false;
+      await startApp(user.uid, true);
+      return;
+    } catch(e){
+      console.error("Cloud login failed:", e);
+      const localMatch = await verifyLocalCredentials(cleanUsername, password);
+      const canMigrate = !!localMatch && ["auth/user-not-found","auth/invalid-credential","auth/wrong-password"].includes(e?.code);
+      if(canMigrate){
+        const localRaw = storageGet(profileDataKey(localMatch.id));
+        let localState = null;
+        try { localState = localRaw ? normalizeState(JSON.parse(localRaw)) : cloneDefaultState(); } catch(err){ localState = cloneDefaultState(); }
+        try {
+          const cloudUser = await window.ALStudyPlannerCloud.createAccount(cleanUsername, password, localMatch, localState);
+          const meta = { ...localMatch, id: cloudUser.uid, username:cleanUsername };
+          delete meta.passHash; delete meta.passSalt;
+          root.profiles = root.profiles.filter(p => p.id !== localMatch.id && p.username !== cleanUsername);
+          root.profiles.push(meta);
+          saveRoot();
+          storageSet(profileDataKey(cloudUser.uid), JSON.stringify(localState));
+          cloudProfile = meta;
+          activeAuth = true;
+          profileId = cloudUser.uid;
+          await startApp(cloudUser.uid, true);
+          toast("Account moved to cloud sync.", "success");
+          return;
+        } catch(migErr){
+          console.error("Cloud migration failed:", migErr);
+        }
+      }
+      const msg = e?.code === "auth/network-request-failed" ? "No internet connection." : "Invalid username or password.";
+      return toast(msg, "error");
+    }
+  }
+
+  const p = await verifyLocalCredentials(cleanUsername, password);
+  if(!p) return toast("Invalid username or password.", "error");
+  root.current = null;
+  saveRoot();
+  activeAuth = true;
+  profileId = p.id;
+  await startApp(p.id, true);
+}
+
+/* ============ CLOUD/LOCAL APP START ============ */
+async function startCloudApp(user, forceDashboard=true){
+  if(!user){
+    activeAuth = false;
+    profileId = null;
+    cloudProfile = null;
+    state = null;
+    renderGate("login");
+    return;
+  }
+  profileId = user.uid;
+  try {
+    let remote = await window.ALStudyPlannerCloud.load(user.uid);
+    if(!remote || !remote.profile || !remote.state){
+      const cachedRaw = storageGet(profileDataKey(user.uid));
+      const cachedMeta = root.profiles.find(p => p.id === user.uid) || null;
+      if(cachedRaw){
+        try {
+          const cachedState = normalizeState(JSON.parse(cachedRaw));
+          const meta = cachedMeta || { id:user.uid, username:"", name:cachedState.settings.studentName || "", stream:cachedState.settings.stream || "", examYear:cachedState.settings.examYear || "", photoData:cachedState.settings.photoData || "" };
+          await window.ALStudyPlannerCloud.save(user.uid, meta, cachedState);
+          remote = { profile:meta, state:cachedState };
+        } catch(e){}
+      }
+    }
+    if(!remote || !remote.state){
+      throw new Error("Cloud account data not found.");
+    }
+    cloudProfile = { ...(remote.profile || {}), id:user.uid, username:normalizeUsername(remote.profile?.username || "") };
+    state = normalizeState(remote.state);
+    if(!state.settings.studentName) state.settings.studentName = cloudProfile.name || "";
+    if(!state.settings.stream) state.settings.stream = cloudProfile.stream || "";
+    if(!state.settings.examYear) state.settings.examYear = cloudProfile.examYear || "";
+    if(!state.settings.photoData && cloudProfile.photoData) state.settings.photoData = cloudProfile.photoData;
+    storageSet(profileDataKey(user.uid), JSON.stringify(state));
+    // Keep a private local cache for offline recovery; it is never used as a login/account list in cloud mode.
+    const cacheMeta = { ...cloudProfile };
+    root.profiles = root.profiles.filter(p => p.id !== user.uid);
+    root.profiles.push(cacheMeta);
+    root.current = null;
+    saveRoot();
+  } catch(e){
+    console.error("Cloud app load failed:", e);
+    try { await window.ALStudyPlannerCloud.logout(); } catch(err){}
+    activeAuth = false;
+    profileId = null;
+    cloudProfile = null;
+    state = null;
+    toast("Could not load your cloud data. Please check your internet connection.", "error");
+    renderGate("login");
+    return;
+  }
+
+  ensureStreamSubjects();
+  const gateRoot = document.getElementById("gateRoot");
+  gateRoot.innerHTML = "";
+  gateRoot.style.display = "none";
+  const app = document.getElementById("app");
+  app.style.display = "flex";
+  applyTheme();
+  applyAccent();
+  applyLibraryAppearance();
+  getPhotoData(state.settings).then(data => {
+    if(data && !state.settings.photoData){
+      state.settings.photoData = data;
+      syncProfileMeta();
+      saveData();
+    }
+    syncProfileMeta();
+    return refreshBrand();
+  }).catch(()=>refreshBrand());
+  setupShell();
+  const initial = forceDashboard ? "dashboard" : (location.hash.replace("#","") || "dashboard");
+  navigate(ROUTES[initial] ? initial : "dashboard");
+}
+
+/* ============ BOOT: START APP FOR PROFILE ============ */
+async function startApp(id, forceDashboard=false){
+  if(window.ALStudyPlannerCloud?.enabled){
+    if(!activeAuth || !window.ALStudyPlannerCloud.user) {
+      profileId = null;
+      state = null;
+      cloudProfile = null;
+      renderGate("login");
+      return;
+    }
+    return startCloudApp(window.ALStudyPlannerCloud.user, forceDashboard);
+  }
+
+  if(!activeAuth){
+    profileId = null;
+    state = null;
+    renderGate(root.profiles.length ? "login" : "welcome");
+    return;
+  }
+  const prof = root.profiles.find(p => p.id === id);
+  if(!prof){
+    activeAuth = false;
+    profileId = null;
+    state = null;
+    renderGate(root.profiles.length ? "login" : "welcome");
+    return;
+  }
+
+  profileId = id;
+  root.current = null;
+  saveRoot();
+  try {
+    const raw = storageGet(profileDataKey(id));
+    if(!raw){
+      state = cloneDefaultState();
+      state.settings.studentName = prof.name || "";
+      state.settings.stream = prof.stream || "";
+      saveData();
+    } else {
+      state = normalizeState(JSON.parse(raw));
+      if(!state.settings.studentName) state.settings.studentName = prof.name || "";
+      if(!state.settings.stream) state.settings.stream = prof.stream || "";
+      if(!state.settings.photoData && prof.photoData) state.settings.photoData = prof.photoData;
+      saveData();
+    }
+  } catch(e){
+    console.error("startApp load failed:", e);
+    state = cloneDefaultState();
+    state.settings.studentName = prof.name || "";
+    state.settings.stream = prof.stream || "";
+    state.settings.photoData = prof.photoData || "";
+    saveData();
+    toast("Saved profile data was damaged, so a clean profile state was loaded.", "error");
+  }
+
+  ensureStreamSubjects();
+  const gateRoot = document.getElementById("gateRoot");
+  gateRoot.innerHTML = "";
+  gateRoot.style.display = "none";
+  const app = document.getElementById("app");
+  app.style.display = "flex";
+  applyTheme();
+  applyAccent();
+  applyLibraryAppearance();
+  getPhotoData(state.settings).then(data => {
+    if(data && !state.settings.photoData){
+      state.settings.photoData = data;
+      syncProfileMeta();
+      saveData();
+    }
+    syncProfileMeta();
+    return refreshBrand();
+  }).catch(()=>refreshBrand());
+  setupShell();
+  const initial = forceDashboard ? "dashboard" : (location.hash.replace("#","") || "dashboard");
+  navigate(ROUTES[initial] ? initial : "dashboard");
+}
+
+/* ============ BOOTSTRAP ============ */
+async function init(){
+  activeAuth = false;
+  profileId = null;
+  cloudProfile = null;
+  state = null;
+  loadRoot();
+
+  if(window.ALStudyPlannerCloud?.enabled){
+    try {
+      const user = await window.ALStudyPlannerCloud.authReady;
+      if(user){
+        activeAuth = true;
+        profileId = user.uid;
+        await startApp(user.uid, true);
+        return;
+      }
+    } catch(e){
+      console.error("Auth restore failed:", e);
+    }
+    renderGate("login");
+    return;
+  }
+
+  if(root.profiles.length === 0){
+    renderGate("welcome");
+    return;
+  }
+  // Local fallback: never auto-open an account after refresh/reopen.
+  root.current = null;
+  saveRoot();
+  renderGate("login");
+}
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
